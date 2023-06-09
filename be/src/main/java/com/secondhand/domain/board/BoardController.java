@@ -140,5 +140,4 @@ public class BoardController {
         message.setData(boardsListResponse);
         return new ResponseEntity<>(message, null, HttpStatus.OK);
     }
-
 }

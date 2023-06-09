@@ -2,7 +2,8 @@ name: CI/CD
 
 on:
   push:
-    branches: [ test ]
+    branches:
+      - githubAction-patch-1
 
 env:
   DOCKER_IMAGE: gamja

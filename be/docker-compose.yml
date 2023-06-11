@@ -12,7 +12,7 @@ services:
 
   application:
     build: .
-    image: gamja123
+    image: gamja123/second-hand
     container_name: was-application
     ports:
       - 8080:8080

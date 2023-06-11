@@ -34,8 +34,8 @@ jobs:
       - name: Build and push Docker image
         working-directory: ./be
         run: |
-          docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE .
-          docker push $DOCKER_REGISTRY/$DOCKER_IMAGE
+          docker build -t $DOCKER_REGISTRY/second-hand .
+          docker push $DOCKER_REGISTRY/second-hand
 
   deploy:
     needs: build
@@ -56,7 +56,7 @@ jobs:
           script: |
             sudo docker image prune -a --force 
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            docker pull ${{ secrets.DOCKER_REGISTRY }}
+            docker pull ${{ secrets.DOCKER_REGISTRY }}/second-hand
             docker pull ${{ secrets.DOCKER_REGISTRY }}/second-hand-nginx
             docker-compose up -d
             docker image prune -f

@@ -54,9 +54,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker image prune -a --force 
+        ##    sudo docker image prune -a --force
+            sudo docker-compose down --volumes --remove-orphans
             sudo docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}
-            docker pull ${{ secrets.DOCKER_USERNAME }}/second-hand-nginx
+            docker pull ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}/second-hand-nginx
             docker-compose up -d
             docker image prune -f

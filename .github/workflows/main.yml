@@ -54,6 +54,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            sudo docker image prune -a --force 
             sudo docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/second-hand-nginx

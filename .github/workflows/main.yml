@@ -30,6 +30,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
+          cd /c/spring_framework/second-hand
+          chmod +666 Dockerfile
           docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE .
           docker push $DOCKER_REGISTRY/$DOCKER_IMAGE
 

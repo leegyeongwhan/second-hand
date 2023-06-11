@@ -6,7 +6,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./ngnix/conf.d:/etc/nginx/conf.d
     depends_on:
       - application
 

@@ -10,8 +10,6 @@ env:
   DOCKER_REGISTRY: gamja123
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  EC2_HOST: <EC2 인스턴스 IP>
-  EC2_USERNAME: <EC2 인스턴스 사용자 이름>
   SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
 permissions:

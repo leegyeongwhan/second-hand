@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - feat/be/mock-data
-
 env:
+  working-directory: ./backend
   DOCKER_IMAGE: gamja
   DOCKER_REGISTRY: gamja123
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -13,6 +13,9 @@ env:
   EC2_HOST: <EC2 인스턴스 IP>
   EC2_USERNAME: <EC2 인스턴스 사용자 이름>
   SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+permissions:
+  contents: read
 
 jobs:
   build:

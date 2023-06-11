@@ -57,6 +57,5 @@ jobs:
             sudo docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/secondhand-nginx
-          ##  docker run -d -p 8080:8080 ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}
             docker-compose up -d
             docker image prune -f

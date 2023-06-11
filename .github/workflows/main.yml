@@ -56,4 +56,4 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}
-            docker run -d ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}
+            docker run -d -p 8080:8080 ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}

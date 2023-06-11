@@ -45,9 +45,7 @@ jobs:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: Copy SSH key to EC2 instance
         run: |
@@ -56,6 +54,9 @@ jobs:
       - name: SSH into EC2 instance
         uses: appleboy/ssh-action@master
         with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             sudo docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_IMAGE }}

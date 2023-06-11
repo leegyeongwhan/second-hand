@@ -47,7 +47,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Copy SSH key to EC2 instance
+      - name: Copy SSH key to EC2 instances
         run: |
           ssh-copy-id -i "${{ secrets.SSH_KEY }}" ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}
 

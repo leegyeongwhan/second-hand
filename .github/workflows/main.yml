@@ -30,7 +30,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE .
+          docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE -f Dockerfile .
           docker push $DOCKER_REGISTRY/$DOCKER_IMAGE
 
   deploy:

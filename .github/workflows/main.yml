@@ -47,10 +47,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Copy SSH key to EC2 instances
-        run: |
-          ssh-copy-id -i "${{ secrets.SSH_KEY }}" ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}
-
       - name: SSH into EC2 instance
         uses: appleboy/ssh-action@master
         with:

@@ -5,7 +5,7 @@ on:
     branches:
       - feat/be/mock-data
 env:
-  working-directory: ./BE
+  working-directory: ./be
   DOCKER_IMAGE: gamja
   DOCKER_REGISTRY: gamja123
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}

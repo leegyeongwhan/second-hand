@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM adoptopenjdk:11-jdk-hotspot
 
 ARG JAR_FILE=./be/build/libs/*-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar

@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - githubAction-patch-1
+      - feat/be/mock-data
 
 env:
   DOCKER_IMAGE: gamja

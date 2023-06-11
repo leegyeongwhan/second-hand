@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Build with Gradles
+      - name: Build with Gradle
         run: |
           chmod +x gradlew
           ./gradlew clean build

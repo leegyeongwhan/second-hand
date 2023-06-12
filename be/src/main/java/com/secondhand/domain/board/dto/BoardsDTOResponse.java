@@ -2,14 +2,10 @@ package com.secondhand.domain.board.dto;
 
 
 import com.secondhand.domain.board.Status;
-import com.secondhand.util.StatusEnum;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BoardsDTOResponse {
 
     private String title;

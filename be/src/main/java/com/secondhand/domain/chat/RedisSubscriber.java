@@ -1,6 +1,7 @@
 package com.secondhand.domain.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secondhand.domain.chat.dto.request.ChatRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -22,8 +23,8 @@ public class RedisSubscriber implements MessageListener {
         try {
             String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
 
-//            ChatMessageRequest roomMessage = objectMapper.readValue(publishMessage, ChatMessageRequest.class);
-//
+            ChatRequest roomMessage = objectMapper.readValue(publishMessage, ChatRequest.class);
+
 //            if (roomMessage.getType().equals(MessageType.TALK)) {
 //                GetChatMessageResponse chatMessageResponse = new GetChatMessageResponse(roomMessage);
 //                messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), chatMessageResponse);

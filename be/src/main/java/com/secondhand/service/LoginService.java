@@ -48,7 +48,7 @@ public class LoginService {
         }
 
         // 이메일이없는 임시회원 깃허브는 이메일을 안줌  , 임시토큰을준다
-        if (oAuthInfoResponse.getEmail() == null) {
+        else if (oAuthInfoResponse.getEmail() == null) {
             log.debug("깃허브 로그인 임시회원 저장 ================");
             Member findMember = findMemberById(0L);
             log.debug("member id  = {}", findMember.getId());

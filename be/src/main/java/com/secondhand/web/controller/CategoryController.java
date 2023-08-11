@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @Operation(summary = "모든 카테고리 목록", description = "사용자는 모든 카테고리 목록을 가져올 수 있다.")
     @ApiResponses({

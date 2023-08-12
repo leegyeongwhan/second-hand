@@ -8,11 +8,11 @@ public class Utils {
     private Utils() {
     }
 
-    public static Message getObject(final String message) throws Exception {
-        return objectMapper.readValue(message, Message.class);
+    public static ChatMessage getObject(final String message) throws Exception {
+        return objectMapper.readValue(message, ChatMessage.class);
     }
 
-    public static String getString(final Message message) throws Exception {
+    public static String getString(final ChatMessage message) throws Exception {
         return objectMapper.writeValueAsString(message);
     }
 }

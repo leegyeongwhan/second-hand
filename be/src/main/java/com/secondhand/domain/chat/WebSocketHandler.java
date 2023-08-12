@@ -20,7 +20,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var sessionId = session.getId();
         sessions.put(sessionId, session); //세션 저장
         log.debug("웹소켓 연결 시 uuid = {}", sessionId);
-        Message message = Message.builder().sender(sessionId).receiver("all").build();
+        ChatMessage message = ChatMessage.builder().sender(sessionId).receiver("all").build();
         message.newConnect();
         log.debug("만들어진 메세지 = {}", message);
 
@@ -39,7 +39,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
 
-        Message message = Utils.getObject(textMessage.getPayload());
+        ChatMessage message = Utils.getObject(textMessage.getPayload());
         message.setSender(session.getId());
         log.debug("양방향 데이터 통신 메세지의 Receiver  = {}", message.getReceiver());
 
@@ -60,7 +60,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         sessions.remove(sessionId);
 
-        final Message message = new Message();
+        final ChatMessage message = new ChatMessage();
         message.closeConnect();
         message.setSender(sessionId);
 

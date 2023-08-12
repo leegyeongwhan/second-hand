@@ -1,5 +1,6 @@
 package com.secondhand.web.controller;
 
+import com.secondhand.domain.chat.RedisPublisher;
 import com.secondhand.domain.chat.dto.request.ChatRequest;
 import com.secondhand.domain.member.Member;
 import com.secondhand.exception.MemberNotFoundException;
@@ -23,6 +24,7 @@ public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MemberService memberService;
+    private final RedisPublisher redisPublisher;
 
 //    @MessageMapping("/messages")
 //    public void chat(@Valid ChatRequest chatRequest) {

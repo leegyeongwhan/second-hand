@@ -57,6 +57,7 @@ create table product
     constraint fk_product_town1
         foreign key (town_id) references town (town_id)
 );
+-- product 외래키들 index로 변경
 
 
 create table interested

@@ -62,3 +62,68 @@ values ( 'core','gamja456@naver.com', 'img', 1, 2);
 
 INSERT INTO product(title, content, price, thumbnail_url, town_id, category_id, member_id)
 VALUES ('Example Product', 'This is an example product description.', 100, 'https://example.com/thumbnail.jpg', 1, 1, 1);
+
+
+CREATE PROCEDURE InsertProductDataWithBulkInsert()
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    DECLARE product_id_start INT DEFAULT 367373;
+    DECLARE product_count INT DEFAULT 1000000;
+    DECLARE BATCH_SIZE INT DEFAULT 100; -- 한 번에 삽입할 배치 크기
+
+    -- autocommit 모드 비활성화
+    SET autocommit = 0;
+
+    -- 외래 키 검사 비활성화
+    SET FOREIGN_KEY_CHECKS = 0;
+
+    -- 인덱스 비활성화
+    ALTER TABLE product DISABLE KEYS;
+
+    WHILE i < product_count DO
+            START TRANSACTION; -- 트랜잭션 시작
+
+            SET @sql = ''; -- 배치 삽입을 위한 SQL문을 담을 변수 초기화
+
+            WHILE i < product_count AND i < product_id_start + BATCH_SIZE DO
+                    SET @sql = CONCAT(
+                            @sql,
+                            'INSERT INTO product (product_id, title, content, price, status, created_at, count_view, count_like, thumbnail_url, town_id, category_id, member_id, deleted) VALUES (',
+                            product_id_start + i, ', ',
+                            QUOTE(CONCAT('Product ', product_id_start + i)), ', ',
+                            QUOTE(CONCAT('Product Description for ', product_id_start + i)), ', ',
+                            RAND() * 1000, ', ',
+                            QUOTE('SELLING'), ', ',
+                            'NOW() - INTERVAL FLOOR(RAND() * 365) DAY, ',
+                            FLOOR(RAND() * 1000), ', ',
+                            FLOOR(RAND() * 1000), ', ',
+                            QUOTE('https://example.com/thumbnail'), ', ',
+                            FLOOR(RAND() * 30) + 1, ', ',
+                            FLOOR(RAND() * 10) + 1, ', ',
+                            FLOOR(RAND() * 10) + 1, ', ',
+                            '0);'
+                        );
+
+                    SET i = i + 1;
+                END WHILE;
+
+            -- 배치 삽입 실행
+            PREPARE stmt FROM @sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            COMMIT; -- 트랜잭션 커밋
+        END WHILE;
+
+    -- 인덱스 다시 활성화
+    ALTER TABLE product ENABLE KEYS;
+
+    -- 외래 키 검사 다시 활성화
+    SET FOREIGN_KEY_CHECKS = 1;
+
+    -- autocommit 모드 다시 활성화
+    SET autocommit = 1;
+END;
+
+CALL InsertProductDataWithBulkInsert();
+

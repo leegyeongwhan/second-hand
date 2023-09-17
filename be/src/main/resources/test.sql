@@ -32,3 +32,5 @@ HAVING (:status = 0 AND (p.status = 'SELLING' OR p.status = 'RESERVING'))
 ORDER BY p.product_id DESC
 LIMIT :offset, :limit
 
+    DELIMITER //
+

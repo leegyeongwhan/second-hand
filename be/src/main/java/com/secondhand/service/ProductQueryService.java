@@ -1,12 +1,11 @@
 package com.secondhand.service;
 
-import com.secondhand.exception.ProductNotFoundException;
 import com.secondhand.domain.interested.Interested;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.product.repository.ProductRepository;
+import com.secondhand.exception.ProductNotFoundException;
 import com.secondhand.web.dto.filtercondition.ProductCategorySearchCondition;
-import com.secondhand.web.dto.filtercondition.ProductSalesSearchCondition;
 import com.secondhand.web.dto.filtercondition.ProductSearchCondition;
 import com.secondhand.web.dto.response.MainPageCategoryResponse;
 import com.secondhand.web.dto.response.MainPageResponse;
@@ -51,25 +50,12 @@ public class ProductQueryService {
         return MainPageResponse.of(products, userId);
     }
 
-    public MainPageResponse getMemberSalesProducts(ProductSalesSearchCondition condition, Pageable pageable, long userId) {
-        Slice<Product> page = productRepository.findAllByStatus(condition, pageable, userId);
-        List<Product> products = page.getContent();
-        for (Product product : products) {
-            System.out.println("product = " + product.getStatus().getValue());
-        }
-        log.debug("products = {}", products);
-        return MainPageResponse.of(products, userId);
-    }
 
     public MainPageCategoryResponse getLikeProductList(ProductCategorySearchCondition productSearchCondition, Pageable pageable, long userId) {
         //로그인한 유저가 좋아요 누른목록
         Member member = memberService.findMemberById(userId);
         Set<Interested> interesteds = member.getInteresteds();
-        for (Interested interested : interesteds) {
-            if (interested.getProduct().getCategory().getCategoryId() == 4) {
-                log.debug("interested = {}", interested.getProduct().getId());
-            }
-        }
+
         List<Long> likedCategoryIds = interesteds.stream()
                 .map(interested -> interested.getProduct().getCategory().getCategoryId())
                 .collect(Collectors.toList());
@@ -89,5 +75,4 @@ public class ProductQueryService {
     public Product findById(long productId) {
         return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
     }
-
 }

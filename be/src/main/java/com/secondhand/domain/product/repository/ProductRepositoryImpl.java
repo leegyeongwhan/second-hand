@@ -1,13 +1,11 @@
 package com.secondhand.domain.product.repository;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.product.Status;
 import com.secondhand.web.dto.filtercondition.ProductCategorySearchCondition;
-import com.secondhand.web.dto.filtercondition.ProductSalesSearchCondition;
 import com.secondhand.web.dto.filtercondition.ProductSearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,6 @@ import java.util.List;
 
 import static com.secondhand.domain.categorie.QCategory.category;
 import static com.secondhand.domain.interested.QInterested.interested;
-import static com.secondhand.domain.member.QMember.member;
 import static com.secondhand.domain.product.QProduct.product;
 import static com.secondhand.domain.town.QTown.town;
 
@@ -80,8 +77,8 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
 
         List<Product> products = jpaQueryFactory.selectFrom(product)
                 .where(locationEq(condition.getTownId()),
-                        categoryEq(condition.getCategoryId())
-                )
+                        categoryEq(condition.getCategoryId()),
+                        isOnSales(condition))
                 .limit(pageSize)
                 .orderBy(product.id.desc())
                 .fetch();
@@ -93,13 +90,16 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
 
     @Override
     public Slice<Product> findAllByCategory(ProductCategorySearchCondition condition, Pageable pageable, long userId) {
+        int pageSize = pageable.getPageSize() + 1;
 
         log.debug("querydsl 실행 ========================");
+
         JPAQuery<Product> query = jpaQueryFactory.selectFrom(product)
                 .leftJoin(product.towns, town).fetchJoin()
                 .leftJoin(product.category, category).fetchJoin()
                 .leftJoin(product.member).fetchJoin()
                 .leftJoin(product.interesteds, interested).fetchJoin()
+
                 .where(
                         categoryEq(condition.getCategoryId()),
                         //      categoryListEq(condition.getCategoryId(), likedCategoryIds))
@@ -119,35 +119,8 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
         return new SliceImpl<>(products, pageable, hasNext(products, PAGE_SIZE + nextPageIndex));
     }
 
-    @Override
-    public Slice<Product> findAllByStatus(ProductSalesSearchCondition condition, Pageable pageable, long userId) {
-        log.debug("querydsl 실행 ========================");
-        JPAQuery<Product> query = jpaQueryFactory.selectFrom(product)
-                .leftJoin(product.towns, town).fetchJoin()
-                .leftJoin(product.category, category).fetchJoin()
-                .leftJoin(product.member, member).fetchJoin()
-                .where(
-                        isOnSales(condition),
-                        product.member.id.eq(userId)
-                )
-                .orderBy(product.id.desc());
 
-        log.debug("status = {}} ", Status.getStatusByValue(1).toString());
-        log.debug("status = {}} ", Status.getStatusByValue(0).toString());
-        log.debug("getStatus = {}} ", condition.getStatus());
-
-        log.debug("offset = {}", pageable.getPageNumber() * PAGE_SIZE);
-        log.debug("pageable.getPageNumber() = {}", pageable.getPageNumber());
-        List<Product> products = query.offset(pageable.getPageNumber() * PAGE_SIZE)
-                .limit(PAGE_SIZE)
-                .fetch();
-
-        log.debug("qurelydsl 종료 =================");
-        int nextPageIndex = pageable.getPageNumber() * PAGE_SIZE;
-        return new SliceImpl<>(products, pageable, hasNext(products, PAGE_SIZE + nextPageIndex));
-    }
-
-    private static BooleanExpression isOnSales(ProductSalesSearchCondition condition) {
+    private static BooleanExpression isOnSales(ProductSearchCondition condition) {
         if (condition.getStatus() == null) {
             return null;
         }
@@ -175,4 +148,5 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
         }
         return product.category.categoryId.eq(categoryId);
     }
+
 }

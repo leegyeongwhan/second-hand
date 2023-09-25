@@ -1,13 +1,12 @@
 package com.secondhand.web.controller;
 
-import com.secondhand.domain.product.Product;
 import com.secondhand.domain.login.LoginCheck;
 import com.secondhand.domain.login.LoginValue;
+import com.secondhand.domain.product.Product;
 import com.secondhand.service.ProductQueryService;
 import com.secondhand.service.ProductService;
 import com.secondhand.util.BasicResponse;
 import com.secondhand.web.dto.filtercondition.ProductCategorySearchCondition;
-import com.secondhand.web.dto.filtercondition.ProductSalesSearchCondition;
 import com.secondhand.web.dto.filtercondition.ProductSearchCondition;
 import com.secondhand.web.dto.requset.ProductSaveRequest;
 import com.secondhand.web.dto.requset.ProductUpdateRequest;
@@ -40,11 +39,9 @@ public class ProductController {
     )
     @LoginCheck
     @GetMapping
-    public BasicResponse<MainPageResponse> viewPage(ProductSearchCondition productSearchCondition,
-                                                    Pageable pageable,
-                                                    @LoginValue long userId) {
+    public BasicResponse<MainPageResponse> viewPage(ProductSearchCondition productSearchCondition, @LoginValue long userId) {
 
-        MainPageResponse mainPageResponse = productQueryService.getProductList(productSearchCondition, pageable, userId);
+        MainPageResponse mainPageResponse = productQueryService.getProductList(productSearchCondition, userId);
 
         return BasicResponse.send("사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)", mainPageResponse);
 
@@ -87,21 +84,6 @@ public class ProductController {
 
     }
 
-
-    @Operation(
-            summary = "판매/세일 중인 상품", description = "사용자는 세일/판매 중인 상품을 볼수 있다."
-    )
-    @LoginCheck
-    @GetMapping("/sales")
-    public BasicResponse<MainPageResponse> productSalesView(@Valid ProductSalesSearchCondition productSearchCondition,
-                                                            Pageable pageable,
-                                                            @LoginValue long userId) {
-
-        MainPageResponse products = productQueryService.getMemberSalesProducts(productSearchCondition, pageable, userId);
-
-        return BasicResponse.send("판매/세일 중인 상품.", products);
-
-    }
 
     @Operation(
             summary = "상품 등록", description = "사용자는 단일 상품을 등록할 수 있다 저장된 product id반환."

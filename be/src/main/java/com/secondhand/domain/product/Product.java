@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@ToString
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +40,7 @@ public class Product extends BaseTimeEntity {
     private Integer countView;
     private Integer countLike;
     private String thumbnailUrl;
-
+    private Boolean deleted;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "town_id")
     @JsonIgnore
@@ -103,7 +104,7 @@ public class Product extends BaseTimeEntity {
 
     public Boolean findLiked() {
         for (Interested interested : interesteds) {
-            if (interested.getProduct().id == this.id) {
+            if (interested.getProduct().getId() == this.id) {
                 return true;
             }
         }
@@ -119,10 +120,7 @@ public class Product extends BaseTimeEntity {
     }
 
     public boolean checkIsMine(long userId) {
-        if (member.getId() == userId) {
-            return true;
-        }
-        return false;
+        return member.getId() == userId;
     }
 
     public boolean checkIsDetailPageMine(long userId) {

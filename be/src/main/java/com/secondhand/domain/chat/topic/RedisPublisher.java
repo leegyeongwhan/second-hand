@@ -1,5 +1,7 @@
-package com.secondhand.domain.chat;
+package com.secondhand.domain.chat.topic;
 
+import com.secondhand.domain.chat.ChatMessage;
+import com.secondhand.domain.chat.ChatMessageEvent;
 import com.secondhand.domain.chat.dto.request.ChatRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

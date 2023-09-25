@@ -1,6 +1,6 @@
 package com.secondhand.service;
 
-import com.secondhand.domain.chat.ChatRepository;
+import com.secondhand.domain.chat.repository.ChatRepository;
 import com.secondhand.domain.chat.dto.request.ChatRequest;
 import com.secondhand.domain.member.Member;
 import lombok.RequiredArgsConstructor;

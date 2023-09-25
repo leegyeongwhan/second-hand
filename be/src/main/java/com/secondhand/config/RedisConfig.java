@@ -1,6 +1,6 @@
 package com.secondhand.config;
 
-import com.secondhand.domain.chat.RedisSubscriber;
+import com.secondhand.domain.chat.topic.RedisSubscriber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

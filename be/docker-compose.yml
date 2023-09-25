@@ -9,6 +9,12 @@ services:
     expose:
       - 8080
 
+redis:
+  image: redis
+  container_name: redis
+  ports:
+    - 6379:6379
+
   frontend:
     build: .
     container_name: frontend

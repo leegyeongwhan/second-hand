@@ -1,4 +1,4 @@
-package com.secondhand.domain.chat;
+package com.secondhand.domain.chat.topic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secondhand.domain.chat.dto.request.ChatRequest;

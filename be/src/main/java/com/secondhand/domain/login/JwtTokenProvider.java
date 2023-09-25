@@ -19,9 +19,9 @@ public class JwtTokenProvider {
     public static final String MEMBER_ID = "memberId";
     public static final String TOKEN_TYPE = "tokenType";
     public static final int ACCESS_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000;
-    public static final int REFRESH_TOKEN_VALID_TIME = 10 * 24 * 60 * 60 * 1000;
-    private String secret;
-    private String refreshSecretKey;
+    public static final long REFRESH_TOKEN_VALID_TIME = 30L * 24 * 60 * 60 * 1000L; // 30일 (long 형식 사용)
+    private final String secret;
+    private final String refreshSecretKey;
 
     public JwtTokenProvider(@Value("${JWT_SECRET_KEY}") String secret,
                             @Value("${JWT_SECRET_REFRESH_KEY}") String refreshSecretKey) {

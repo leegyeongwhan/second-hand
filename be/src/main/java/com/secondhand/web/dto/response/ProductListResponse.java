@@ -4,7 +4,6 @@ import com.secondhand.domain.product.Product;
 import com.secondhand.web.dto.updatedto.CountInfoDTO;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

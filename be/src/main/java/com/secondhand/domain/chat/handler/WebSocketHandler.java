@@ -1,5 +1,7 @@
-package com.secondhand.domain.chat;
+package com.secondhand.domain.chat.handler;
 
+import com.secondhand.domain.chat.ChatMessage;
+import com.secondhand.domain.chat.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;

@@ -12,6 +12,7 @@ import com.secondhand.web.dto.response.MainPageResponse;
 import com.secondhand.web.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductQueryService {
+
+    private final int PAGE_SIZE = 10;
 
     private final ProductRepository productRepository;
     private final MemberService memberService;
@@ -43,10 +46,11 @@ public class ProductQueryService {
         return ProductResponse.of(product.checkIsDetailPageMine(userId), product);
     }
 
-    public MainPageResponse getProductList(ProductSearchCondition productSearchCondition, Pageable pageable, long userId) {
+    public MainPageResponse getProductList(ProductSearchCondition productSearchCondition, long userId) {
+        Pageable pageable = PageRequest.ofSize(PAGE_SIZE);
         Slice<Product> page = productRepository.findAllByTowns(productSearchCondition, pageable, userId);
         List<Product> products = page.getContent();
-        log.debug("products = {}", products);
+        log.debug("products = {}", products.size());
         return MainPageResponse.of(products, userId);
     }
 

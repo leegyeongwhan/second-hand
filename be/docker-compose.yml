@@ -5,22 +5,33 @@ services:
     image: gamja123/second-hand
     container_name: was-application
     ports:
-      - 8080:8080
+      - "8080:8080"
     expose:
       - 8080
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+  ##    - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    restart: always
+  ##  command: redis-server /usr/local/conf/redis.conf
 
   frontend:
     build: .
     container_name: frontend
     image: gamja123/frontend
     ports:
-      - 3000:3000
+      - "3000:3000"
 
   web:
     image: gamja123/second-hand-nginx
     container_name: was-nginx
     ports:
-      - 80:80
+      - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     environment:

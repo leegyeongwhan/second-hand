@@ -1,5 +1,6 @@
 package com.secondhand.domain.product.repository;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -77,16 +78,31 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
 
         List<Product> products = jpaQueryFactory.selectFrom(product)
                 .where(locationEq(condition.getTownId()),
+                        ltProductId(condition.getLastNum()),
                         categoryEq(condition.getCategoryId()),
-                        isOnSales(condition))
+                        isLikedEq(condition.getIsLiked(), userId),
+                        isOnSales(condition),
+                        product.deleted.eq(false))
                 .limit(pageSize)
                 .orderBy(product.id.desc())
                 .fetch();
 
+        System.out.println("pageSize = " + pageSize);
         log.debug("qurelydsl 종료 =================");
-        int nextPageIndex = pageable.getPageNumber() * PAGE_SIZE;
-        return new SliceImpl<>(products, pageable, hasNext(products, PAGE_SIZE + nextPageIndex));
+        return new SliceImpl<>(getContents(products, pageSize - 1), pageable, hasNext(products, pageSize - 1));
     }
+
+    private Predicate ltProductId(Long productId) {
+        if (productId == null) {
+            return null; // BooleanExpression 자리에 null이 반환되면 조건문에서 자동으로 제거된다
+        }
+        return product.id.lt(productId);
+    }
+
+    private List<Product> getContents(List<Product> fetch, int pageSize) {
+        return fetch.subList(0, Math.min(fetch.size(), pageSize));
+    }
+
 
     @Override
     public Slice<Product> findAllByCategory(ProductCategorySearchCondition condition, Pageable pageable, long userId) {
@@ -149,4 +165,14 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
         return product.category.categoryId.eq(categoryId);
     }
 
+    private BooleanExpression isLikedEq(Boolean isLiked, long userId) {
+        if (isLiked == null) {
+            return null;
+        }
+        if (isLiked) {
+            return product.interesteds.any().member.id.eq(userId);
+        } else {
+            return product.interesteds.isEmpty();
+        }
+    }
 }

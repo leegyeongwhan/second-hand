@@ -1,5 +1,6 @@
 package com.secondhand.service;
 
+import com.secondhand.domain.login.JwtService;
 import com.secondhand.domain.login.JwtTokenProvider;
 import com.secondhand.domain.login.Token;
 import com.secondhand.domain.member.*;
@@ -17,12 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class LoginService {
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final MemberPasswordRepository memberPasswordRepository;
     private final MemberProfileRepository memberProfileRepository;
@@ -32,7 +36,7 @@ public class LoginService {
     private final RequestOAuthInfoService requestOAuthInfoService;
 
     @Transactional
-    public MemberLoginResponse login(OAuthLoginParams params, String userAgent) {
+    public MemberLoginResponse login(OAuthLoginParams params, String userAgent) throws IOException {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params, userAgent);
 
         //이미 있는 멤버라면 토큰을 업데이트 해주고 아니라면 새로만든다

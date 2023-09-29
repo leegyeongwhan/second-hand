@@ -1,10 +1,12 @@
 package com.secondhand.web.controller;
 
+import com.secondhand.domain.login.JwtService;
 import com.secondhand.domain.login.LoginCheck;
 import com.secondhand.domain.login.LoginValue;
 import com.secondhand.domain.oauth.dto.req.GithubRequestCode;
 import com.secondhand.domain.oauth.dto.req.KakaoRequestCode;
 import com.secondhand.service.LoginService;
+import com.secondhand.web.dto.response.MemberProfileResponse;
 import com.secondhand.web.dto.response.MemberResponse;
 import com.secondhand.service.MemberService;
 import com.secondhand.util.BasicResponse;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -30,14 +33,19 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
+    private final JwtService jwtService;
 
     @Operation(
             summary = "깃허브 로그인", description = "사용자 깃허브를 통한 로그인"
     )
     @PostMapping("/auth/github/login")
-    public BasicResponse<MemberLoginResponse> login(@RequestHeader(name = "User-Agent") String userAgent, @RequestBody GithubRequestCode code) throws IOException, InterruptedException {
+    public BasicResponse<MemberLoginResponse> login(@RequestHeader(name = "User-Agent") String userAgent,
+                                                    @RequestBody GithubRequestCode code,
+                                                    HttpServletResponse response) throws IOException, InterruptedException {
         log.debug("프론트로 부터받은  코드= {}", code.getAuthorizationCode());
         MemberLoginResponse memberResponseDTO = loginService.login(code, userAgent);
+        memberService.setMemberProfileByOauthLogin(memberResponseDTO);
+        // jwtService.setTokenHeader(memberProfileResponse, response);
 
         return BasicResponse.send("깃허브 로그인", memberResponseDTO);
     }
@@ -46,10 +54,14 @@ public class MemberController {
             summary = "카카오 로그인", description = "사용자 카카오를 통한 로그인"
     )
     @PostMapping("/auth/kakao/login")
-    public BasicResponse<MemberLoginResponse> kakaoLogin(@RequestHeader(name = "User-Agent") String userAgent, @RequestBody KakaoRequestCode params) {
+    public BasicResponse<MemberLoginResponse> kakaoLogin(@RequestHeader(name = "User-Agent") String userAgent,
+                                                         @RequestBody KakaoRequestCode params,
+                                                         HttpServletResponse response) throws IOException {
         log.debug("프론트로 부터 받은 코드 = {}", params.getAuthorizationCode());
         log.debug("프론트로 부터 받은 코드 = {}", params.oAuthProvider().name());
         MemberLoginResponse memberResponseDTO = loginService.login(params, userAgent);
+        memberService.setMemberProfileByOauthLogin(memberResponseDTO);
+        // jwtService.setTokenHeader(memberProfileResponse, response);
 
         return BasicResponse.send("카카오 로그인", memberResponseDTO);
     }

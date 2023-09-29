@@ -103,9 +103,9 @@ public class ProductService {
         }
     }
 
-    private boolean checkIsMine(long userId, long product) {
+    private void checkIsMine(long userId, long product) {
         if (product == userId) {
-            return true;
+            return;
         }
         throw new NotUserMineProductException();
     }

@@ -1,6 +1,5 @@
 package com.secondhand.domain.login;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.secondhand.domain.member.Member;
 import com.secondhand.exception.token.TokenException;
 import com.secondhand.exception.token.TokenNotFoundException;
@@ -37,18 +36,18 @@ public class JwtTokenProvider {
      * 클라이언트는 새롭게 받은 Access Token을 기존의 Access Token에 덮어쓰게 된다.
      */
 
-    public Token createToken(Member member) throws JsonProcessingException {
+    public Token createToken(Member member) {
 
         String accessToken = Jwts.builder()
                 .setSubject(SUBJECT_NAME)
-                .claim(MEMBER_ID,  member.getId()) //페이로드,헤더는 자동설정
+                .claim(MEMBER_ID, member.getId()) //페이로드,헤더는 자동설정
                 .setExpiration(new Date((new Date()).getTime() + ACCESS_TOKEN_VALID_TIME)) // 토큰의 만료일을 설정 : 현재 10일
                 .signWith(SignatureAlgorithm.HS256, secret) // HS256 알고리즘과 시크릿 키를 사용하여 서명
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .setSubject(SUBJECT_NAME)
-                .claim(MEMBER_ID,  member.getId()) //페이로드,헤더는 자동설정
+                .claim(MEMBER_ID, member.getId()) //페이로드,헤더는 자동설정
                 .setIssuedAt(new Date()) // 토큰 발행 시간 정보
                 .setExpiration(new Date((new Date()).getTime() + REFRESH_TOKEN_VALID_TIME)) // 토큰의 만료일을 설정 : 현재 10일
                 .signWith(SignatureAlgorithm.HS256, refreshSecretKey)  // 사용할 암호화 알고리즘과

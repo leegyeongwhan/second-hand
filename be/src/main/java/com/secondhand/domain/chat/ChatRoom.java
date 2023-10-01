@@ -60,4 +60,7 @@ public class ChatRoom extends BaseTimeEntity {
                 .chatroomStatus(ChatroomStatus.FULL)
                 .build();
     }
+
+    public void setUserCount(long userCount) {
+    }
 }

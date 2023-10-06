@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.UUID;
@@ -30,7 +31,7 @@ public class ChatRoomService {
     private ValueOperations<String, String> valueOps;
     private final ApplicationEventPublisher eventPublisher;
 
-
+    @Transactional
     public ChatRoom createChatRoom(Product product, Member buyer) {
         // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
 //        if (chatRoomRepository.findByBuyer_IdAndItem_Id(buyer.getId(), item.getId()).isPresent()) {
@@ -43,7 +44,7 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.create(product, buyer));
         hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getChatRoomId(), chatRoom);
 
-        //  eventPublisher.publishEvent(new ChatroomCreatedEvent(ChatroomInfo.from(savedChatroom)));
+        eventPublisher.publishEvent(new ChatroomCreatedEvent(ChatroomInfo.from(savedChatroom)));
 
         return chatRoom;
     }

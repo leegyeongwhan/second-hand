@@ -7,7 +7,7 @@ import com.secondhand.domain.chat.dto.request.ChatRequest;
 import com.secondhand.domain.chat.repository.ChatRoomRedisRepository;
 import com.secondhand.domain.login.LoginCheck;
 import com.secondhand.domain.login.LoginValue;
-import com.secondhand.domain.chat.service.ChatService;
+import com.secondhand.domain.chat.service.ChatRoomFacadeService;
 import com.secondhand.util.BasicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/chat")
 public class ChatRoomController {
     private final ChatRoomRedisRepository chatRoomRedisRepository;
-    private final ChatService chatService;
+    private final ChatRoomFacadeService chatRoomFacadeService;
 
     @Operation(
             summary = "채팅방 리스트 조회",
@@ -29,7 +29,7 @@ public class ChatRoomController {
     )
     @GetMapping("/rooms")
     public BasicResponse<ChatroomList> room() {
-        ChatroomList roomList = chatService.findRoomList();
+        ChatroomList roomList = chatRoomFacadeService.findRoomList();
         return BasicResponse.send("채팅방 리스트가 조회되었습니다.", roomList);
     }
 
@@ -40,7 +40,7 @@ public class ChatRoomController {
     )
     @GetMapping("/rooms/enter/{roomId}")
     public BasicResponse<ChatroomDeatail> roomDetail(Model model, @PathVariable String roomId) {
-        ChatroomDeatail roomDetail = chatService.findRoomDetail();
+        ChatroomDeatail roomDetail = chatRoomFacadeService.findRoomDetail();
         return BasicResponse.send("채팅방 단일 정보가 조회되었습니다..", roomDetail);
     }
 
@@ -53,7 +53,7 @@ public class ChatRoomController {
     @LoginCheck
     @PostMapping("/rooms")
     public BasicResponse<Long> createRoom(@RequestBody ChatRequest chatRequest, @LoginValue long userId) {
-        long chatRoomId = chatService.creatChatRoom(chatRequest.getProductId(), userId);
+        long chatRoomId = chatRoomFacadeService.creatChatRoom(chatRequest.getProductId(), userId);
         return BasicResponse.send("채팅방이 생성 되었습니다..", chatRoomId);
     }
 

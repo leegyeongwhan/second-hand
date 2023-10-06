@@ -1,4 +1,4 @@
-package com.secondhand.domain.chat.dto;
+package com.secondhand.domain.chat;
 
 import lombok.*;
 

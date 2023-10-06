@@ -1,8 +1,8 @@
 package com.secondhand.web.controller;
 
-import com.secondhand.domain.chat.dto.ChatMessage;
+import com.secondhand.domain.chat.ChatMessage;
 import com.secondhand.domain.chat.repository.ChatRoomRedisRepository;
-import com.secondhand.domain.chat.service.ChatService;
+import com.secondhand.domain.chat.service.ChatRoomFacadeService;
 import com.secondhand.domain.chat.topic.RedisPublisher;
 import com.secondhand.domain.login.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ChatController {
 
     private final RedisPublisher redisPublisher;
     private final ChatRoomRedisRepository chatRoomRedisRepository;
-    private final ChatService chatService;
+    private final ChatRoomFacadeService chatRoomFacadeService;
     private final JwtTokenProvider jwtTokenProvider;
 
     /**
@@ -32,6 +32,6 @@ public class ChatController {
         // 채팅방 인원수 세팅
         message.setUserCount(chatRoomRedisRepository.getUserCount(message.getRoomId()));
         // Websocket에 발행된 메시지를 redis로 발행(publish)
-        chatService.sendChatMessage(message);
+        chatRoomFacadeService.sendChatMessage(message);
     }
 }

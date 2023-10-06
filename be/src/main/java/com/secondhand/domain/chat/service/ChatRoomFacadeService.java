@@ -1,6 +1,6 @@
 package com.secondhand.domain.chat.service;
 
-import com.secondhand.domain.chat.dto.ChatMessage;
+import com.secondhand.domain.chat.ChatMessage;
 import com.secondhand.domain.chat.ChatRoom;
 import com.secondhand.domain.chat.dto.ChatroomDeatail;
 import com.secondhand.domain.chat.dto.ChatroomList;
@@ -22,7 +22,7 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ChatService {
+public class ChatRoomFacadeService {
 
     private final ChannelTopic channelTopic;
     private final MemberRepository memberRepository;

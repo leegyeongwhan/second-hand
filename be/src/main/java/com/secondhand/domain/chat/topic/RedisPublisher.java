@@ -1,6 +1,6 @@
 package com.secondhand.domain.chat.topic;
 
-import com.secondhand.domain.chat.dto.ChatMessage;
+import com.secondhand.domain.chat.ChatMessage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -25,7 +25,6 @@ public class ChatRoomRedisRepository {
     private HashOperations<String, String, String> hashOpsEnterInfo;
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> valueOps;
-    private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     // 모든 채팅방 조회

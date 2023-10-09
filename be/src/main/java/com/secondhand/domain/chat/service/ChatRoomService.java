@@ -44,7 +44,8 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.create(product, buyer));
         hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getChatRoomId(), chatRoom);
 
-        eventPublisher.publishEvent(new ChatroomCreatedEvent(ChatroomInfo.from(savedChatroom)));
+        //이벤트 pub/sub
+        eventPublisher.publishEvent(new ChatroomCreatedEvent(ChatroomInfo.from(chatRoom)));
 
         return chatRoom;
     }

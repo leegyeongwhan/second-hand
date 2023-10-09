@@ -22,12 +22,9 @@ import java.util.stream.Collectors;
 public class ChatRoom extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_room_id")
     private Long id;
     private UUID chatRoomId;
 
-    private String title;
-    private String contents;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -25,6 +26,12 @@ public class ChatRoom extends BaseTimeEntity {
     private Long id;
     private UUID chatRoomId;
 
+    @Column(nullable = false, length = 1000)
+    private String subject;
+
+    @Column(nullable = false)
+    private LocalDateTime lastSendTime;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -34,15 +41,18 @@ public class ChatRoom extends BaseTimeEntity {
     private Member customer;
 
     //채팅방 하나에 판매자한명 구독하는 사고자하는 사람은 여러명
-    private Long seller;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "seller_id")
+    private Member seller;
 
     @Enumerated(EnumType.STRING)
     private ChatroomStatus chatroomStatus;
 
     @Builder
-    public ChatRoom(Long id, UUID chatroomId, Product product, Member customer, Long seller, ChatroomStatus chatroomStatus) {
+    public ChatRoom(Long id, UUID chatroomId, String subject, Product product, Member customer, Member seller, ChatroomStatus chatroomStatus) {
         this.id = id;
         this.chatRoomId = chatroomId;
+        this.subject = subject;
         this.product = product;
         this.customer = customer;
         this.seller = seller;
@@ -52,9 +62,10 @@ public class ChatRoom extends BaseTimeEntity {
     public static ChatRoom create(Product product, Member buyer) {
         return ChatRoom.builder()
                 .chatroomId(UUID.randomUUID())
+                .subject("")
                 .product(product)
                 .customer(buyer)
-                .seller(product.getMember().getId())
+                .seller(product.getMember())
                 .chatroomStatus(ChatroomStatus.FULL)
                 .build();
     }
@@ -70,6 +81,6 @@ public class ChatRoom extends BaseTimeEntity {
     }
 
     private Map<Long, Member> getChatroomMembers() {
-        return Map.of(customer.getId(), customer, this.seller, this.product.getMember());
+        return Map.of(customer.getId(), customer, this.seller.getId(), this.product.getMember());
     }
 }

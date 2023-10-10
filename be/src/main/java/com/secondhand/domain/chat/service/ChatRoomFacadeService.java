@@ -4,14 +4,19 @@ import com.secondhand.domain.chat.ChatMessage;
 import com.secondhand.domain.chat.ChatRoom;
 import com.secondhand.domain.chat.dto.ChatroomDeatail;
 import com.secondhand.domain.chat.dto.ChatroomList;
+import com.secondhand.domain.chat.repository.ChatPaginationRepository;
 import com.secondhand.domain.chat.repository.ChatRoomRedisRepository;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.member.MemberRepository;
 import com.secondhand.domain.product.Product;
 import com.secondhand.service.ProductService;
 import com.secondhand.util.MemberServiceUtils;
+import com.secondhand.domain.chat.dto.ChatRoomResponse;
+import com.secondhand.domain.chat.CustomSlice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
@@ -24,23 +29,16 @@ import java.util.*;
 @Service
 public class ChatRoomFacadeService {
 
+    private static final long DEFAULT_MESSAGE_COUNT = 0L;
+
     private final ChannelTopic channelTopic;
     private final MemberRepository memberRepository;
     private final ProductService productService;
     private final ChatRoomService chatRoomService;
-    private final RedisTemplate redisTemplate;
+    private final ChatPaginationRepository chatPaginationRepository;
+    private final ChatCountRepository chatCountRepository;
     private final ChatRoomRedisRepository chatRoomRedisRepository;
-
-    /**
-     * destination정보에서 roomId 추출
-     */
-    public String getRoomId(String destination) {
-        int lastIndex = destination.lastIndexOf('/');
-        if (lastIndex != -1)
-            return destination.substring(lastIndex + 1);
-        else
-            return "";
-    }
+    private final RedisTemplate redisTemplate;
 
     /**
      * 채팅방에 메시지 발송
@@ -57,12 +55,6 @@ public class ChatRoomFacadeService {
         redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
     }
 
-    public ChatroomList findRoomList() {
-        List<ChatRoom> chatRooms = chatRoomRedisRepository.findAllRoom();
-        chatRooms.stream().forEach(room -> room.setUserCount(chatRoomRedisRepository.getUserCount(String.valueOf(room.getId()))));
-        return new ChatroomList();
-    }
-
     public ChatroomDeatail findRoomDetail() {
         return new ChatroomDeatail();
     }
@@ -74,5 +66,24 @@ public class ChatRoomFacadeService {
         Product product = productService.findById(productId);
         ChatRoom createdChatroom = chatRoomService.createChatRoom(product, buyer);
         return createdChatroom.getId();
+    }
+
+    public CustomSlice<ChatRoomResponse> read(Long memberId, Pageable pageable, Long itemId) {
+        Slice<ChatRoomResponse> response = chatPaginationRepository.findByMemberId(memberId, pageable, itemId);
+
+        List<ChatRoomResponse> contents = response.getContent();
+
+        Map<Long, Long> newMessageCounts = chatCountRepository.countNewMessage(memberId);
+
+        contents.forEach(chatRoomResponse -> {
+            Long chatRoomId = chatRoomResponse.getChatRoomId();
+            Long messageCount = newMessageCounts.getOrDefault(chatRoomId, DEFAULT_MESSAGE_COUNT);
+            chatRoomResponse.assignNewMessageCount(messageCount);
+        });
+
+        boolean hasNext = response.hasNext();
+        Long nextCursor = hasNext ? (long) (pageable.getPageNumber() + 1) : null;
+
+        return new CustomSlice<>(contents, nextCursor, response.hasNext());
     }
 }

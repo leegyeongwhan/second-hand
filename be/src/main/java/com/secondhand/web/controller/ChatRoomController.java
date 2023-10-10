@@ -1,6 +1,8 @@
 package com.secondhand.web.controller;
 
 import com.secondhand.domain.chat.ChatRoom;
+import com.secondhand.domain.chat.CustomSlice;
+import com.secondhand.domain.chat.dto.ChatRoomResponse;
 import com.secondhand.domain.chat.dto.ChatroomDeatail;
 import com.secondhand.domain.chat.dto.ChatroomList;
 import com.secondhand.domain.chat.dto.request.ChatRequest;
@@ -11,13 +13,17 @@ import com.secondhand.domain.chat.service.ChatRoomFacadeService;
 import com.secondhand.util.BasicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/chat")
+@RequestMapping("/api/chats")
 public class ChatRoomController {
     private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final ChatRoomFacadeService chatRoomFacadeService;
@@ -27,10 +33,14 @@ public class ChatRoomController {
             tags = "Chatroom",
             description = "사용자는 채팅방 리스트를 조회할 수 있다."
     )
-    @GetMapping("/rooms")
-    public BasicResponse<ChatroomList> room() {
-        ChatroomList roomList = chatRoomFacadeService.findRoomList();
-        return BasicResponse.send("채팅방 리스트가 조회되었습니다.", roomList);
+    @LoginCheck
+    @GetMapping()
+    public BasicResponse<CustomSlice<ChatRoomResponse>> room(@PageableDefault Pageable pageable,
+                                                             @LoginValue long userId) {
+        CustomSlice<ChatRoomResponse> chatRooms = chatRoomFacadeService.read(userId, pageable, null);
+
+        // chatRoomRequests.put(deferredResult, memberId);
+        return BasicResponse.send("채팅방 리스트가 조회되었습니다.", chatRooms);
     }
 
     @Operation(

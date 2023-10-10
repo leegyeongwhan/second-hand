@@ -101,18 +101,32 @@ create table participant_room
 
 create table chat_room
 (
-    chat_room_id bigint auto_increment
+    chat_room_id   bigint auto_increment
         primary key,
-    title        varchar(45) null,
-    created_at   datetime    not null,
-    contents     text        null,
-    product_id   bigint      not null,
-    seller_id    bigint      not null,
-    customer_id  bigint      not null,
+    title          varchar(45)   null,
+    created_at     datetime      not null,
+    last_send_time datetime      not null,
+    contents       text          null,
+    subject        varchar(1000) not null,
+    product_id     bigint        not null,
+    seller_id      bigint        not null,
+    customer_id    bigint        not null,
     constraint fk_chat_room_member1
         foreign key (seller_id) references member (member_id),
     constraint fk_chat_room_member2
         foreign key (customer_id) references member (member_id),
     constraint fk_chat_room_product1
         foreign key (product_id) references product (product_id)
+);
+
+create table chat_log
+(
+    id           bigint auto_increment primary key,
+    message      varchar(1000) not null,
+    read_count   bigint        not null,
+    sender_id    bigint        not null,
+    createdAt    datetime      not null,
+    chat_room_id bigint not null,
+    constraint fk_chat_room_id
+        foreign key (chat_room_id) references chat_room (chat_room_id)
 );

@@ -57,7 +57,8 @@ dependencies {
     implementation 'software.amazon.awssdk:s3:2.16.83'
 
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-}
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:0.6.8")
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-javax-validation:0.6.8")}
 
 
 clean {

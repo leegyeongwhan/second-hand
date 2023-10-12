@@ -4,6 +4,7 @@ import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.navercorp.fixturemonkey.javax.validation.plugin.JavaxValidationPlugin;
 import com.secondhand.domain.image.Image;
+import com.secondhand.domain.interested.Interested;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,8 @@ public class ProductTest {
     void init() {
         product = fixtureMonkey().giveMeBuilder(Product.class)
                 .set("title", "Origin Title")
-                .set("contents", "Origin contents")
+                .set("detailImageUrl", fixtureMonkey().giveMe(Image.class, 5))
+                .set("detailInterested", fixtureMonkey().giveMe(Interested.class, 5))
                 .sample();
     }
 

@@ -2,24 +2,22 @@ package com.secondhand.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.secondhand.domain.categorie.Category;
-import com.secondhand.exception.NotUserMineProductException;
 import com.secondhand.domain.image.Image;
 import com.secondhand.domain.interested.Interested;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.town.Town;
+import com.secondhand.exception.NotUserMineProductException;
 import com.secondhand.util.BaseTimeEntity;
 import com.secondhand.web.dto.requset.ProductSaveRequest;
 import com.secondhand.web.dto.requset.ProductUpdateRequest;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@ToString
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,16 +29,32 @@ public class Product extends BaseTimeEntity {
     @Column(name = "product_id")
     private Long id;
 
+    @Column(length = 45, nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String content;
+
     private Integer price;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", length = 45, nullable = false)
     private Status status;
+
+    @Column(nullable = false)
+    @ColumnDefault(value = "0")
     private Integer countView;
+
+    @Column(nullable = false)
+    @ColumnDefault(value = "0")
     private Integer countLike;
+
+    @Column(length = 512, nullable = false)
     private String thumbnailUrl;
+
+    @Column(nullable = false)
     private Boolean deleted;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "town_id")
     @JsonIgnore
@@ -49,7 +63,6 @@ public class Product extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @JsonIgnore
-
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -68,14 +81,15 @@ public class Product extends BaseTimeEntity {
                 .content(requestInfo.getContent())
                 .price(requestInfo.getPrice())
                 .thumbnailUrl(requestInfo.getProductImages().get(0).getName())
-                .towns(town)
-                .category(category)
                 .countLike(0)
                 .countView(0)
                 .status(Status.SELLING)
+                .deleted(false)
+                .category(category)
+                .towns(town)
                 .member(member)
-                .images(new ArrayList<>())
-                .interesteds(new HashSet<>())
+                //   .images(new ArrayList<>())
+                //  .interesteds(new HashSet<>())
                 .build();
     }
 

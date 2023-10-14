@@ -30,6 +30,9 @@ jobs:
 
       - run: |
           
+          touch ./be/src/main/resources/custom/setting.yml
+          echo "${{ secrets.SETTING }}" > ./be/src/main/resources/custom/setting.yml
+          
           touch ./be/src/main/resources/application-aws.yml
           echo "${{ secrets.APPLICATION_AWS }}" > ./be/src/main/resources/application-aws.yml
           

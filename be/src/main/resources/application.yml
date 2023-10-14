@@ -1,12 +1,16 @@
-spring:
-  profiles:
-    active: prod
-    include:
-      - auth
-      - aws
-  jpa:
-    properties:
-      hibernate:
-        jdbc:
-        default_batch_fetch_size: 1000
-    open-in-view: true
+  spring:
+    config:
+      import: custom/setting.yml
+    profiles:
+      active: prod
+      include:
+        - auth
+        - aws
+    jpa:
+      properties:
+        hibernate:
+          jdbc:
+          default_batch_fetch_size: 1000
+      open-in-view: true
+
+

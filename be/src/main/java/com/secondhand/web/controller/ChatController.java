@@ -4,7 +4,7 @@ import com.secondhand.domain.chat.ChatMessage;
 import com.secondhand.domain.chat.repository.ChatRoomRedisRepository;
 import com.secondhand.domain.chat.service.ChatRoomFacadeService;
 import com.secondhand.domain.chat.topic.RedisPublisher;
-import com.secondhand.domain.login.JwtTokenProvider;
+import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;

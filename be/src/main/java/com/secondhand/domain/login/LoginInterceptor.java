@@ -1,12 +1,11 @@
 package com.secondhand.domain.login;
 
-import com.secondhand.domain.member.Member;
 import com.secondhand.domain.member.MemberToken;
 import com.secondhand.domain.member.MemberTokenRepository;
-import com.secondhand.exception.MemberNotFoundException;
 import com.secondhand.domain.member.MemberRepository;
 import com.secondhand.exception.token.RefreshTokenNotFoundException;
-import com.secondhand.exception.token.TokenNotFoundException;
+import com.secondhand.infrastructure.jwt.AuthorizationExtractor;
+import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

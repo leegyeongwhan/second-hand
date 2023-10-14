@@ -1,7 +1,7 @@
 package com.secondhand.service;
 
 import com.secondhand.domain.login.JwtService;
-import com.secondhand.domain.login.JwtTokenProvider;
+import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.domain.login.Token;
 import com.secondhand.domain.member.*;
 import com.secondhand.domain.oauth.RequestOAuthInfoService;
@@ -42,7 +42,7 @@ public class LoginService {
         //이미 있는 멤버라면 토큰을 업데이트 해주고 아니라면 새로만든다
         if (isMemberEmailExists(oAuthInfoResponse.getEmail())) {
             Member member = findMemberByEmail(oAuthInfoResponse.getEmail());
-            Token jwtToken = jwtTokenProvider.createToken(member);
+            Token jwtToken = jwtTokenProvider.createToken(member.getId());
             MemberToken memberToken = memberTokenRepository.findByMemberId(member.getId())
                     .orElseThrow(RefreshTokenNotFoundException::new);
             memberToken.update(jwtToken.getRefreshToken(), member);
@@ -57,7 +57,7 @@ public class LoginService {
             Member findMember = findMemberById(0L);
             log.debug("member id  = {}", findMember.getId());
             findMember.update(oAuthInfoResponse);
-            Token jwtToken = jwtTokenProvider.createToken(findMember);
+            Token jwtToken = jwtTokenProvider.createToken(findMember.getId());
             MemberToken memberToken = memberTokenRepository.findByMemberId(findMember.getId())
                     .orElseThrow(RefreshTokenNotFoundException::new);
             memberToken.update(jwtToken.getRefreshToken(), findMember);
@@ -71,7 +71,7 @@ public class LoginService {
         log.debug("오쓰로부터 받은 닉네임 깃허브는 안줌 = {}", oAuthInfoResponse.getEmail());
         MemberProfile memberProfile = memberProfileRepository.save(new MemberProfile(oAuthInfoResponse.getEmail()));
         Member member = memberRepository.save(Member.create(oAuthInfoResponse, memberProfile, townService.findById(1L)));
-        Token jwtToken = jwtTokenProvider.createToken(member);
+        Token jwtToken = jwtTokenProvider.createToken(member.getId());
         MemberToken memberToken = memberTokenRepository.save(new MemberToken(jwtToken.getRefreshToken(), member));
         log.debug("새로 만든 jwt 토큰 = {}", jwtToken);
         log.debug("회원이 저장할 refresh token = {}", memberToken.getMemberToken());
@@ -90,7 +90,7 @@ public class LoginService {
         Member member = memberRepository.save(Member.create(joinRequest.getNickName(),
                 "GENERAL", memberProfile, memberPassword, townService.findById(1L)));
 
-        Token jwtToken = jwtTokenProvider.createToken(member);
+        Token jwtToken = jwtTokenProvider.createToken(member.getId());
         memberTokenRepository.save(new MemberToken(jwtToken.getRefreshToken(), member));
         log.debug("jwt token = {}", jwtToken);
         log.debug("새로운 맴버 생성 = {}", member);
@@ -112,7 +112,7 @@ public class LoginService {
             Member saveMember = memberRepository.save(Member.toEntity(member.getLoginName(), member.getOauthProvider(), member.getImgUrl(),
                     memberProfile, member.getMemberPassword()));
 
-            Token jwtToken = jwtTokenProvider.createToken(saveMember);
+            Token jwtToken = jwtTokenProvider.createToken(saveMember.getId());
             memberTokenRepository.save(new MemberToken(jwtToken.getRefreshToken(), saveMember));
 
             resetRecord(userId);

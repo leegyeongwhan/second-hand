@@ -49,6 +49,16 @@ public class FixtureBuilderFactory {
         return Arbitraries.integers().between(1, bound).sample();
     }
 
+    public static long buildCategoryId() {
+
+        return Arbitraries.integers().between(1, 18).sample();
+    }
+
+    public static long buildTownId() {
+
+        return Arbitraries.integers().between(1, 31).sample();
+    }
+
     public static ArbitraryBuilder<Product> builderProduct() {
 
         return fixtureMonkey.giveMeBuilder(Product.class)
@@ -83,9 +93,9 @@ public class FixtureBuilderFactory {
         return fixtureMonkey.giveMeBuilder(ProductSaveRequest.class)
                 .set("title", pickRandomString(nameList))
                 .set("content", pickRandomString(contentList))
-                .set("categoryId", pickRandomString(categoryList))
                 .set("price", buildInteger())
-                .set("townId", buildInteger(10));
+                .set("categoryId", buildCategoryId())
+                .set("townId", buildTownId());
     }
 
     public static ArbitraryBuilder<Member> builderMember() {
@@ -103,5 +113,4 @@ public class FixtureBuilderFactory {
                 .set("id", buildLong(100))
                 .set("memberEmail", "email@email.com");
     }
-
 }

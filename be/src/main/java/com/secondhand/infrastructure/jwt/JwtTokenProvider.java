@@ -1,33 +1,46 @@
-package com.secondhand.domain.login;
+package com.secondhand.infrastructure.jwt;
 
-import com.secondhand.domain.member.Member;
+import com.secondhand.domain.login.Token;
+import com.secondhand.domain.login.TokenType;
 import com.secondhand.exception.token.TokenException;
 import com.secondhand.exception.token.TokenNotFoundException;
 import com.secondhand.exception.token.TokenTimeException;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Map;
 
 @Slf4j
-@Service
+@Component
+@EnableConfigurationProperties(JwtProperties.class)
+@PropertySource("classpath:custom/setting.yml") // 설정정보 위치 생략가능
 public class JwtTokenProvider {
 
     public static final String SUBJECT_NAME = "login_member";
-    public static final String MEMBER_ID = "memberId";
-    public static final String TOKEN_TYPE = "tokenType";
     public static final int ACCESS_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000;
     public static final long REFRESH_TOKEN_VALID_TIME = 30L * 24 * 60 * 60 * 1000L; // 30일 (long 형식 사용)
-    private final String secret;
-    private final String refreshSecretKey;
+    public static final String MEMBER_ID = "memberId";
+    public static final String TOKEN_TYPE = "tokenType";
 
-    public JwtTokenProvider(@Value("${JWT_SECRET_KEY}") String secret,
-                            @Value("${JWT_SECRET_REFRESH_KEY}") String refreshSecretKey) {
-        this.secret = secret;
-        this.refreshSecretKey = refreshSecretKey;
+    private final SecretKey secretKey;
+
+    public JwtTokenProvider(JwtProperties jwtProperties) {
+        this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
+
+
+//    public JwtTokenProvider(@Value("${JWT_SECRET_KEY}") String secret,
+//                            @Value("${JWT_SECRET_REFRESH_KEY}") String refreshSecretKey) {
+//        this.secret = secret;
+//        this.refreshSecretKey = refreshSecretKey;
+//    }
 
     /**
      * Access Token이 만료가 되면 서버는 만료되었다는 Response를 하게 된다.
@@ -36,21 +49,22 @@ public class JwtTokenProvider {
      * 클라이언트는 새롭게 받은 Access Token을 기존의 Access Token에 덮어쓰게 된다.
      */
 
-    public Token createToken(Member member) {
+    public Token createToken(long memberId) {
+        Date now = new Date();
+        Date accessTokenExpiration = new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME);
 
         String accessToken = Jwts.builder()
-                .setSubject(SUBJECT_NAME)
-                .claim(MEMBER_ID, member.getId()) //페이로드,헤더는 자동설정
-                .setExpiration(new Date((new Date()).getTime() + ACCESS_TOKEN_VALID_TIME)) // 토큰의 만료일을 설정 : 현재 10일
-                .signWith(SignatureAlgorithm.HS256, secret) // HS256 알고리즘과 시크릿 키를 사용하여 서명
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .setIssuedAt(now)
+                .setExpiration(accessTokenExpiration)
+                .addClaims(Map.of("MEMBER_ID", memberId))
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setSubject(SUBJECT_NAME)
-                .claim(MEMBER_ID, member.getId()) //페이로드,헤더는 자동설정
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .claim(MEMBER_ID, memberId) //페이로드,헤더는 자동설정
                 .setIssuedAt(new Date()) // 토큰 발행 시간 정보
                 .setExpiration(new Date((new Date()).getTime() + REFRESH_TOKEN_VALID_TIME)) // 토큰의 만료일을 설정 : 현재 10일
-                .signWith(SignatureAlgorithm.HS256, refreshSecretKey)  // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅
                 .compact();
 
@@ -72,7 +86,7 @@ public class JwtTokenProvider {
     private void isValidateAccessToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(token);
             if (!claimsJws.getBody().getExpiration().before(new Date())) {
                 claimsJws.getBody();
@@ -90,7 +104,7 @@ public class JwtTokenProvider {
     public boolean isRefreshToken(String token) throws RuntimeException {
         try {
             Jws<Claims> claimsJws = Jwts.parser()
-                    .setSigningKey(refreshSecretKey)
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(token);
 
             return !claimsJws.getBody().getExpiration().before(new Date()) && !claimsJws.getBody().isEmpty();
@@ -106,7 +120,7 @@ public class JwtTokenProvider {
 
     private boolean isAccessToken(String token) {
         try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claimsJws.getBody().isEmpty();
             // 여기서 추가적인 검증 로직을 넣을 수도 있습니다.
         } catch (RuntimeException e) {
@@ -117,7 +131,7 @@ public class JwtTokenProvider {
 
     public Long getSubject(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(secret)
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
         log.debug("claims = {}", claims);
@@ -127,7 +141,7 @@ public class JwtTokenProvider {
 
     public Long getSubjectRefreshSecretKey(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(refreshSecretKey)
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
         log.debug("claims = {}", claims);
@@ -141,10 +155,7 @@ public class JwtTokenProvider {
 
     private Jws<Claims> getClaims(String jwt) {
         try {
-            return Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt);
-        } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
-            throw new JwtException("토큰이 유효하지 않습니다");
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt);
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
             throw new JwtException("토큰이 유효하지 않습니다");

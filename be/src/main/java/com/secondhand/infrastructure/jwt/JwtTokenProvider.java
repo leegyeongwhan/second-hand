@@ -2,6 +2,7 @@ package com.secondhand.infrastructure.jwt;
 
 import com.secondhand.domain.login.Token;
 import com.secondhand.domain.login.TokenType;
+import com.secondhand.exception.ErrorMessage;
 import com.secondhand.exception.token.TokenException;
 import com.secondhand.exception.token.TokenNotFoundException;
 import com.secondhand.exception.token.TokenTimeException;
@@ -80,6 +81,19 @@ public class JwtTokenProvider {
             return TokenType.REFRESH_TOKEN;
         } else {
             throw new TokenException();
+        }
+    }
+
+    public void validateToken(final String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (ExpiredJwtException e) {
+            throw new UnAuthorizedException(ErrorMessage.EXPIRED_TOKEN);
+        } catch (JwtException e) {
+            throw new UnAuthorizedException(ErrorMessage.INVALID_TOKEN);
         }
     }
 

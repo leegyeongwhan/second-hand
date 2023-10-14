@@ -13,9 +13,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayName("JWT 발급 / 검증 테스트")
 class JwtTokenProviderTest {
 
-    private final String secretKey = "fdsfdsfgfdgfdgdgdgfdgdsfds";
-    private final JwtTokenProvider jwtProvider = new JwtTokenProvider(
-            new JwtProperties(secretKey));
+    private final String secretKey = "2901ujr9021urf0u902hf021y90fh9c210hg093hg091h3g90h30gh901hg09h01";
+    private final JwtTokenProvider jwtProvider = new JwtTokenProvider(new JwtProperties(secretKey));
 
     @DisplayName("회원의 PK가 payload로 주어지면 토큰이 생성되는데 성공한다.")
     @Test
@@ -57,8 +56,7 @@ class JwtTokenProviderTest {
     @Test
     void givenToken_whenExtractClaims_thenSuccess() {
         // given
-        TokenCreator tokenCreator = new TokenCreator(jwtProvider);
-        Token token = tokenCreator.createToken(1L);
+        Token token = TokenCreator.createToken(1L);
 
         // when
         Long subject = jwtProvider.getSubject(token.getAccessToken());

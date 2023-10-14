@@ -1,4 +1,4 @@
-package com.secondhand.domain.login;
+package com.secondhand.presentation.suport;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

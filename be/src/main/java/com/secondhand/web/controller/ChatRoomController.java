@@ -4,22 +4,19 @@ import com.secondhand.domain.chat.ChatRoom;
 import com.secondhand.domain.chat.CustomSlice;
 import com.secondhand.domain.chat.dto.ChatRoomResponse;
 import com.secondhand.domain.chat.dto.ChatroomDeatail;
-import com.secondhand.domain.chat.dto.ChatroomList;
 import com.secondhand.domain.chat.dto.request.ChatRequest;
 import com.secondhand.domain.chat.repository.ChatRoomRedisRepository;
-import com.secondhand.domain.login.LoginCheck;
-import com.secondhand.domain.login.LoginValue;
+import com.secondhand.presentation.suport.LoginCheck;
+import com.secondhand.presentation.suport.LoginValue;
 import com.secondhand.domain.chat.service.ChatRoomFacadeService;
 import com.secondhand.util.BasicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @RequiredArgsConstructor
 @Controller

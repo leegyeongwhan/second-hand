@@ -1,7 +1,7 @@
 package com.secondhand.web.controller;
 
-import com.secondhand.domain.login.LoginCheck;
-import com.secondhand.domain.login.LoginValue;
+import com.secondhand.presentation.suport.LoginCheck;
+import com.secondhand.presentation.suport.LoginValue;
 import com.secondhand.domain.product.Product;
 import com.secondhand.service.ProductQueryService;
 import com.secondhand.service.ProductService;

@@ -1,12 +1,11 @@
 package com.secondhand.web.controller;
 
 import com.secondhand.domain.login.JwtService;
-import com.secondhand.domain.login.LoginCheck;
-import com.secondhand.domain.login.LoginValue;
+import com.secondhand.presentation.suport.LoginCheck;
+import com.secondhand.presentation.suport.LoginValue;
 import com.secondhand.domain.oauth.dto.req.GithubRequestCode;
 import com.secondhand.domain.oauth.dto.req.KakaoRequestCode;
 import com.secondhand.service.LoginService;
-import com.secondhand.web.dto.response.MemberProfileResponse;
 import com.secondhand.web.dto.response.MemberResponse;
 import com.secondhand.service.MemberService;
 import com.secondhand.util.BasicResponse;

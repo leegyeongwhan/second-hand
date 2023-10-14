@@ -1,5 +1,7 @@
-package com.secondhand.domain.login;
+package com.secondhand.presentation.interceptor;
 
+import com.secondhand.presentation.suport.LoginCheck;
+import com.secondhand.domain.login.TokenType;
 import com.secondhand.domain.member.MemberToken;
 import com.secondhand.domain.member.MemberTokenRepository;
 import com.secondhand.domain.member.MemberRepository;

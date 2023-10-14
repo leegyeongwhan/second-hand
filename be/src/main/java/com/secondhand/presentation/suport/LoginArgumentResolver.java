@@ -1,4 +1,4 @@
-package com.secondhand.domain.login;
+package com.secondhand.presentation.suport;
 
 import com.secondhand.exception.token.MissingTokenException;
 import lombok.extern.slf4j.Slf4j;

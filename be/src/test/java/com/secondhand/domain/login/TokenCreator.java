@@ -1,22 +1,21 @@
 package com.secondhand.domain.login;
 
 
+import com.secondhand.infrastructure.jwt.JwtProperties;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 public class TokenCreator {
 
-    private static final String secretKey = "fsdfsdfsdfsdffsdsd";
-    private final JwtTokenProvider jwtProvider;
+    private static final String secretKey = "fsdfsdfsdfsdgfdgdgfdgfdgfdgfdgfdffsdsd";
+    private static final JwtTokenProvider jwtProvider = new JwtTokenProvider(new JwtProperties(secretKey));
 
-    TokenCreator(JwtTokenProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
-
-    public Token createToken(Long payload) {
+    public static Token createToken(Long payload) {
         return jwtProvider.createToken(payload);
     }
 
@@ -25,7 +24,7 @@ public class TokenCreator {
         return Jwts.builder()
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() - 1))
-                .signWith(SignatureAlgorithm.HS256, secretKey) // HS256 알고리즘과 시크릿 키를 사용하여 서명
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .compact();
     }
 }

@@ -30,6 +30,8 @@ jobs:
 
       - run: |
           
+          mkdir  ./be/src/main/resources/custom
+
           touch ./be/src/main/resources/custom/setting.yml
           echo "${{ secrets.SETTING }}" > ./be/src/main/resources/custom/setting.yml
           

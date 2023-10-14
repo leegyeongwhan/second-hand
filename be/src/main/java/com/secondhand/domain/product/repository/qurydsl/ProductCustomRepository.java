@@ -1,4 +1,4 @@
-package com.secondhand.domain.product.repository;
+package com.secondhand.domain.product.repository.qurydsl;
 
 import com.secondhand.domain.product.Product;
 import com.secondhand.web.dto.filtercondition.ProductCategorySearchCondition;

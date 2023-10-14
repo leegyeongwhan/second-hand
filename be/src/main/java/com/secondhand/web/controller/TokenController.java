@@ -1,6 +1,6 @@
 package com.secondhand.web.controller;
 
-import com.secondhand.domain.login.JwtTokenProvider;
+import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.domain.login.LoginCheck;
 import com.secondhand.domain.login.LoginValue;
 import com.secondhand.domain.member.Member;
@@ -37,7 +37,7 @@ public class TokenController {
     @GetMapping("/refresh")
     public BasicResponse<ResponseTokens> reissueRefreshToken(@LoginValue long userId) {
         Member member = memberRepository.findById(userId).orElseThrow(MemberNotFoundException::new);
-        ResponseTokens responseTokens = new ResponseTokens(jwtTokenProvider.createToken(member));
+        ResponseTokens responseTokens = new ResponseTokens(jwtTokenProvider.createToken(member.getId()));
         MemberToken memberToken = memberTokenRepository.findByMemberId(member.getId()).orElseThrow(TokenException::new);
         memberToken.update(responseTokens.getToken().getRefreshToken(), member);
         return BasicResponse.send("토큰 재발급", responseTokens);

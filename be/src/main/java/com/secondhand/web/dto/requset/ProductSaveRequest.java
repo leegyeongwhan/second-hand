@@ -1,9 +1,6 @@
 package com.secondhand.web.dto.requset;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
@@ -12,8 +9,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
+@Builder
 public class ProductSaveRequest {
     @NotNull
     private String title;
@@ -25,6 +22,5 @@ public class ProductSaveRequest {
     private Integer price;
     @NotNull
     private Long townId;
-    @NotNull
     private List<MultipartFile> productImages;
 }

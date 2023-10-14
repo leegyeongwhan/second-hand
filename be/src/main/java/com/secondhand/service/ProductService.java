@@ -1,10 +1,12 @@
 package com.secondhand.service;
 
 import com.secondhand.domain.categorie.Category;
+import com.secondhand.exception.BadRequestException;
+import com.secondhand.exception.ErrorMessage;
 import com.secondhand.exception.NotUserMineProductException;
 import com.secondhand.exception.ProductNotFoundException;
 import com.secondhand.domain.image.Image;
-import com.secondhand.domain.image.ImageRepository;
+import com.secondhand.domain.product.repository.Image.ImageRepository;
 import com.secondhand.domain.interested.Interested;
 import com.secondhand.domain.interested.InterestedRepository;
 import com.secondhand.domain.member.Member;
@@ -17,38 +19,59 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
+    private static final int IMAGE_LIST_MAX_SIZE = 9;
+
     private final ProductRepository productRepository;
+    private final ImageRepository imageRepository;
     private final InterestedRepository interestedRepository;
     private final CategoryService categoryService;
     private final TownService townService;
     private final MemberService memberService;
     private final ImageService imageService;
-    private final ImageRepository imageRepository;
 
     @Transactional
     public Long save(long userId, ProductSaveRequest requestInfo) {
+        if (!isValidThumbnail(requestInfo.getProductImages().get(0))) {
+            throw new BadRequestException(ErrorMessage.INVALID_REQUEST, "썸네일 이미지는 반드시 들어와야 합니다.");
+        }
+        if (requestInfo.getProductImages() != null && requestInfo.getProductImages().size() > IMAGE_LIST_MAX_SIZE) {
+            throw new BadRequestException(ErrorMessage.INVALID_REQUEST, "썸네일 이미지 외의 이미지는 최대 9개까지 들어올 수 있습니다.");
+        }
+
+        String thumbnailUrl = imageService.upload(requestInfo.getProductImages().get(0));
+        List<String> itemImageUrls = imageService.uploadImageList(requestInfo.getProductImages());
+
+        itemImageUrls = new ArrayList<>(itemImageUrls);
+        itemImageUrls.add(thumbnailUrl);
+
         Category category = categoryService.findById(requestInfo.getCategoryId());
         Town town = townService.findById(requestInfo.getTownId());
         Member member = memberService.findMemberById(userId);
         Product product = Product.create(requestInfo, member, category, town);
         Product saveProduct = productRepository.save(product);
-        List<String> imageUrls = imageService.uploadImageList(requestInfo.getProductImages()); //s3에 이미지 올라감
 
-        saveProduct.updateThumbnail(imageUrls.get(0));
-        for (String url : imageUrls) {
-            Image image = new Image(url, saveProduct);
-            imageRepository.save(image);
-        }
+        List<Image> itemImages = itemImageUrls.stream()
+                .map(url -> Image.of(url, saveProduct))
+                .collect(Collectors.toList());
+        imageRepository.saveAllImages(itemImages);
+
         return saveProduct.getId();
+    }
+
+    private boolean isValidThumbnail(MultipartFile image) {
+        return image != null && !image.isEmpty();
     }
 
     @Transactional

@@ -1,4 +1,4 @@
-package com.secondhand.domain.product.repository;
+package com.secondhand.domain.product.repository.qurydsl;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.product.Status;
+import com.secondhand.domain.product.repository.qurydsl.ProductCustomRepository;
 import com.secondhand.web.dto.filtercondition.ProductCategorySearchCondition;
 import com.secondhand.web.dto.filtercondition.ProductSearchCondition;
 import lombok.RequiredArgsConstructor;

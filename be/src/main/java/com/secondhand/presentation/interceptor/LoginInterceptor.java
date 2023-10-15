@@ -1,7 +1,6 @@
 package com.secondhand.presentation.interceptor;
 
 import com.secondhand.presentation.suport.LoginCheck;
-import com.secondhand.domain.login.TokenType;
 import com.secondhand.domain.member.MemberToken;
 import com.secondhand.domain.member.MemberTokenRepository;
 import com.secondhand.domain.member.MemberRepository;
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -25,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public static final String BEARER = "Bearer";
     public static final String USER_ID = "userId";
     private final AuthorizationExtractor authExtractor;
-    private final JwtTokenProvider jwtService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
     private final MemberTokenRepository memberTokenRepository;
 
@@ -38,12 +38,13 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             //헤더로 부터 토큰을 얻어온 후 유효한 토큰인지 검증한다. 요청에  디코딩한 값을 세팅
             if ((token != null && !token.equals(""))) {
-                TokenType tokenType = jwtService.validateToken(token);
-                Long id;
-                if (tokenType == TokenType.ACCESS_TOKEN) {
-                    id = jwtService.getSubject(token); // 액세스 토큰에서 사용자 ID 추출
+                jwtTokenProvider.validateToken(token);
+                Map<String, Object> claims = jwtTokenProvider.extractClaims(token);
+                Long id = (Long) claims.get("memberId");
+                if (id != null) {
+                    id = jwtTokenProvider.getSubject(token); // 액세스 토큰에서 사용자 ID 추출
                 } else {
-                    id = jwtService.getSubjectRefreshSecretKey(token); // 리프레시 토큰에서 사용자 ID 추출
+                    id = jwtTokenProvider.getSubjectRefreshSecretKey(token); // 리프레시 토큰에서 사용자 ID 추출
                     MemberToken memberToken = memberTokenRepository.findByMemberId(id).orElseThrow(RefreshTokenNotFoundException::new);
                     if (!memberToken.getMemberToken().equals(token)) {
                         log.debug("DB에있는 유저 토큰과 header에 있는 토큰 비교 = {}", memberToken.getMemberToken().equals(token));

@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class TokenCreator {
 
-    private static final String secretKey = "fsdfsdfsdfsdgfdgdgfdgfdgfdgfdgfdffsdsd";
+    private static final String secretKey = "2901ujr9021urf0u902hf021y90fh9c210hg093hg091h3g90h30gh901hg09h01";
     private static final JwtTokenProvider jwtProvider = new JwtTokenProvider(new JwtProperties(secretKey));
 
     public static Token createToken(Long payload) {

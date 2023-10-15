@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -37,12 +38,6 @@ public class JwtTokenProvider {
     }
 
 
-//    public JwtTokenProvider(@Value("${JWT_SECRET_KEY}") String secret,
-//                            @Value("${JWT_SECRET_REFRESH_KEY}") String refreshSecretKey) {
-//        this.secret = secret;
-//        this.refreshSecretKey = refreshSecretKey;
-//    }
-
     /**
      * Access Token이 만료가 되면 서버는 만료되었다는 Response를 하게 된다.
      * 클라이언트는 해당 Response를 받으면 Refresh Token을 보낸다.
@@ -58,7 +53,7 @@ public class JwtTokenProvider {
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .setIssuedAt(now)
                 .setExpiration(accessTokenExpiration)
-                .addClaims(Map.of("MEMBER_ID", memberId))
+                .addClaims(Map.of(MEMBER_ID, memberId))
                 .compact();
 
         String refreshToken = Jwts.builder()
@@ -73,16 +68,16 @@ public class JwtTokenProvider {
     }
 
 
-    public TokenType validateToken(String token) {
-        if (isAccessToken(token)) {
-            isValidateAccessToken(token);
-            return TokenType.ACCESS_TOKEN;
-        } else if (isRefreshToken(token)) {
-            return TokenType.REFRESH_TOKEN;
-        } else {
-            throw new TokenException();
-        }
-    }
+//    public TokenType validateToken(String token) {
+//        if (isAccessToken(token)) {
+//            isValidateAccessToken(token);
+//            return TokenType.ACCESS_TOKEN;
+//        } else if (isRefreshToken(token)) {
+//            return TokenType.REFRESH_TOKEN;
+//        } else {
+//            throw new TokenException();
+//        }
+//    }
 
     public void validateToken(final String token) {
         try {
@@ -183,5 +178,25 @@ public class JwtTokenProvider {
             log.error("JWT claims string is empty.");
             throw new JwtException("빈 토큰입니다");
         }
+    }
+
+    public Map<String, Object> extractClaims(final String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Collections.unmodifiableMap(claims);
+    }
+
+    public Long getExpiration(String accessToken) {
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+        long now = new Date().getTime();
+        return expiration.getTime() - now;
     }
 }

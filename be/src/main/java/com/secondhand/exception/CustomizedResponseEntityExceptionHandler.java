@@ -2,6 +2,10 @@ package com.secondhand.exception;
 
 import com.secondhand.exception.ouath.GitHubRequestException;
 import com.secondhand.exception.token.*;
+import com.secondhand.exception.v2.DuplicatedException;
+import com.secondhand.exception.v2.ErrorResponse;
+import com.secondhand.exception.v2.NotFoundException;
+import com.secondhand.exception.v2.UnAuthorizedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -158,5 +162,23 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                         , e.getMessage(), false, request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(404, e.getMessage()));
+    }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(401, e.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicatedException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicatedException(DuplicatedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(401, e.getMessage()));
     }
 }

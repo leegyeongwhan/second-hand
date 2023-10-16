@@ -1,7 +1,4 @@
-package com.secondhand.infrastructure.jwt;
-
-import com.secondhand.exception.ErrorMessage;
-import com.secondhand.exception.SecondHandException;
+package com.secondhand.exception.v2;
 
 public class UnAuthorizedException extends SecondHandException {
 

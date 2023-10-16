@@ -1,4 +1,4 @@
-package com.secondhand.exception;
+package com.secondhand.exception.v2;
 
 import lombok.Getter;
 

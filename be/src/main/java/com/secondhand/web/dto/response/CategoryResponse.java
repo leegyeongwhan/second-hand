@@ -5,8 +5,6 @@ import com.secondhand.domain.categorie.Category;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Entity;
-
 @Getter
 public class CategoryResponse {
 
@@ -28,5 +26,13 @@ public class CategoryResponse {
         this.name = name;
         this.imgUrl = imgUrl;
         this.placeholder = placeholder;
+    }
+
+    public static CategoryResponse toResponse(Category category) {
+        return CategoryResponse.builder()
+                .categoryId(category.getCategoryId())
+                .imgUrl(category.getImgUrl())
+                .name(category.getName())
+                .build();
     }
 }

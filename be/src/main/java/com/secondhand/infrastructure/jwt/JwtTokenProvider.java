@@ -1,11 +1,11 @@
 package com.secondhand.infrastructure.jwt;
 
 import com.secondhand.domain.login.Token;
-import com.secondhand.domain.login.TokenType;
-import com.secondhand.exception.ErrorMessage;
+import com.secondhand.exception.v2.ErrorMessage;
 import com.secondhand.exception.token.TokenException;
 import com.secondhand.exception.token.TokenNotFoundException;
 import com.secondhand.exception.token.TokenTimeException;
+import com.secondhand.exception.v2.UnAuthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -46,38 +46,36 @@ public class JwtTokenProvider {
      */
 
     public Token createToken(long memberId) {
+        return Token.builder()
+                .accessToken(createAccessToken(memberId))
+                .refreshToken(createRefreshToken(memberId))
+                .build();
+    }
+
+    public String createAccessToken(Long memberId) {
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME);
 
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .setIssuedAt(now)
                 .setExpiration(accessTokenExpiration)
                 .addClaims(Map.of(MEMBER_ID, memberId))
                 .compact();
-
-        String refreshToken = Jwts.builder()
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .claim(MEMBER_ID, memberId) //페이로드,헤더는 자동설정
-                .setIssuedAt(new Date()) // 토큰 발행 시간 정보
-                .setExpiration(new Date((new Date()).getTime() + REFRESH_TOKEN_VALID_TIME)) // 토큰의 만료일을 설정 : 현재 10일
-                // signature 에 들어갈 secret값 세팅
-                .compact();
-
-        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
+    public String createRefreshToken(Long memberId) {
+        Date now = new Date();
+        Date refreshTokenExpiration = new Date(now.getTime() + REFRESH_TOKEN_VALID_TIME);
 
-//    public TokenType validateToken(String token) {
-//        if (isAccessToken(token)) {
-//            isValidateAccessToken(token);
-//            return TokenType.ACCESS_TOKEN;
-//        } else if (isRefreshToken(token)) {
-//            return TokenType.REFRESH_TOKEN;
-//        } else {
-//            throw new TokenException();
-//        }
-//    }
+        return Jwts.builder()
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .setIssuedAt(now)
+                .setExpiration(refreshTokenExpiration)
+                .addClaims(Map.of(MEMBER_ID, memberId))
+                .compact();
+    }
+
 
     public void validateToken(final String token) {
         try {

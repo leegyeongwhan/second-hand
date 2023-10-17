@@ -1,14 +1,14 @@
 package com.secondhand.domain.oauth.kakao;
 
-import com.secondhand.exception.ouath.AccessTokenNotFoundException;
-import com.secondhand.exception.ouath.GitHubUserInfoNotFoundException;
-import com.secondhand.domain.oauth.OAuthProvider;
+import com.secondhand.domain.oauth.OAuthProviderV1;
 import com.secondhand.domain.oauth.Oauth;
 import com.secondhand.domain.oauth.dto.KakaoInfoResponse;
 import com.secondhand.domain.oauth.dto.OAuthInfoResponse;
 import com.secondhand.domain.oauth.dto.req.KakaoRequestCode;
 import com.secondhand.domain.oauth.dto.req.OAuthLoginParams;
+import com.secondhand.exception.ouath.AccessTokenNotFoundException;
 import com.secondhand.exception.ouath.GitHubRequestException;
+import com.secondhand.exception.ouath.GitHubUserInfoNotFoundException;
 import com.secondhand.exception.ouath.KakoRequestException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -42,8 +42,8 @@ public class KakaoOauth implements Oauth {
     private String clientId;
 
     @Override
-    public OAuthProvider oAuthProvider() {
-        return OAuthProvider.KAKAO;
+    public OAuthProviderV1 oAuthProvider() {
+        return OAuthProviderV1.KAKAO;
     }
 
     @Override

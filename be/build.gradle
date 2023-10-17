@@ -32,23 +32,39 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //db
+    runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    //Qurydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    //spring
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.assertj:assertj-core:3.24.2'
-    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    //Webflux
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    //Test Containers
+    testImplementation 'org.testcontainers:mysql:1.18.3'
+    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
+    testImplementation "org.testcontainers:junit-jupiter:1.18.3"
+
+    //Swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
     // REST Docs
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
@@ -59,16 +75,10 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
-
     //aws
     implementation 'com.amazonaws:aws-java-sdk-core:1.12.429'
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.429'
     implementation 'software.amazon.awssdk:s3:2.16.83'
-
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     // Fixture 생성 라이브러리
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:0.6.8")

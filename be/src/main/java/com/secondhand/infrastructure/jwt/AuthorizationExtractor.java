@@ -1,28 +1,27 @@
 package com.secondhand.infrastructure.jwt;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
+import java.util.Optional;
 
 @Slf4j
 @Component
 public class AuthorizationExtractor {
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
+    public static final String BEARER = "bearer";
 
+    public static Optional<String> extract(HttpServletRequest request) {
+        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-    public String extract(HttpServletRequest request, String type) {
-        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
-        while (headers.hasMoreElements()) {
-            String value = headers.nextElement();
-            log.debug("headers  value= {} ", value);
-            if (value.toLowerCase().startsWith(type.toLowerCase())) {
-                return value.substring(type.length()).trim();
-            }
+        if (!StringUtils.hasText(header) || !header.toLowerCase().startsWith(BEARER)) {
+            return Optional.empty();
         }
 
-        return "";
+        return Optional.of(header.split(" ")[1]);
     }
+
+    private AuthorizationExtractor() {}
 }

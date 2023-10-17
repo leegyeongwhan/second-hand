@@ -4,7 +4,7 @@ import com.secondhand.domain.oauth.dto.OAuthInfoResponse;
 import com.secondhand.domain.oauth.dto.req.OAuthLoginParams;
 
 public interface Oauth {
-    OAuthProvider oAuthProvider();
+    OAuthProviderV1 oAuthProvider();
 
     String getToken(OAuthLoginParams params, String userAgent);
 

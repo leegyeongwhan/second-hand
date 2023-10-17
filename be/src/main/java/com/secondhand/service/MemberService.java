@@ -1,6 +1,7 @@
 package com.secondhand.service;
 
 import com.secondhand.domain.member.*;
+import com.secondhand.domain.memberToken.MemberTokenRepository;
 import com.secondhand.exception.MemberNotFoundException;
 import com.secondhand.web.dto.requset.UpdateNickNameRequest;
 import com.secondhand.web.dto.response.MemberLoginResponse;

@@ -2,7 +2,7 @@ package com.secondhand.service;
 
 import com.secondhand.domain.categorie.Category;
 import com.secondhand.exception.BadRequestException;
-import com.secondhand.exception.ErrorMessage;
+import com.secondhand.exception.v2.ErrorMessage;
 import com.secondhand.exception.NotUserMineProductException;
 import com.secondhand.exception.ProductNotFoundException;
 import com.secondhand.domain.image.Image;

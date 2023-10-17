@@ -1,5 +1,7 @@
-package com.secondhand.domain.member;
+package com.secondhand.domain.memberToken;
 
+import com.secondhand.domain.member.Member;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

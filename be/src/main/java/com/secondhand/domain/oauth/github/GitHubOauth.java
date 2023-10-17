@@ -1,17 +1,17 @@
 package com.secondhand.domain.oauth.github;
 
-import com.secondhand.domain.oauth.dto.AccessTokenResponseDTO;
-import com.secondhand.domain.oauth.dto.req.AccessTokenRequestBodyDTO;
-import com.secondhand.exception.ouath.AccessTokenNotFoundException;
-import com.secondhand.exception.ouath.GitHubUserInfoNotFoundException;
-import com.secondhand.domain.oauth.service.GiHubService;
-import com.secondhand.domain.oauth.OAuthProvider;
+import com.secondhand.domain.oauth.OAuthProviderV1;
 import com.secondhand.domain.oauth.Oauth;
-import com.secondhand.domain.oauth.dto.OAuthInfoResponse;
+import com.secondhand.domain.oauth.dto.AccessTokenResponseDTO;
 import com.secondhand.domain.oauth.dto.GithubInfoResponse;
+import com.secondhand.domain.oauth.dto.OAuthInfoResponse;
+import com.secondhand.domain.oauth.dto.req.AccessTokenRequestBodyDTO;
 import com.secondhand.domain.oauth.dto.req.GithubRequestCode;
 import com.secondhand.domain.oauth.dto.req.OAuthLoginParams;
+import com.secondhand.domain.oauth.service.GiHubService;
+import com.secondhand.exception.ouath.AccessTokenNotFoundException;
 import com.secondhand.exception.ouath.GitHubRequestException;
+import com.secondhand.exception.ouath.GitHubUserInfoNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,8 +44,8 @@ public class GitHubOauth implements Oauth {
     }
 
     @Override
-    public OAuthProvider oAuthProvider() {
-        return OAuthProvider.GITHUB;
+    public OAuthProviderV1 oAuthProvider() {
+        return OAuthProviderV1.GITHUB;
     }
 
     @Override

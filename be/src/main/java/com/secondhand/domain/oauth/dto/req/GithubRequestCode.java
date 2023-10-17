@@ -1,6 +1,7 @@
 package com.secondhand.domain.oauth.dto.req;
 
 import com.secondhand.domain.oauth.OAuthProvider;
+import com.secondhand.domain.oauth.OAuthProviderV1;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +12,8 @@ public class GithubRequestCode implements OAuthLoginParams {
     private String authorizationCode;
 
     @Override
-    public OAuthProvider oAuthProvider() {
-        return OAuthProvider.GITHUB;
+    public OAuthProviderV1 oAuthProvider() {
+        return OAuthProviderV1.GITHUB;
     }
 }
 

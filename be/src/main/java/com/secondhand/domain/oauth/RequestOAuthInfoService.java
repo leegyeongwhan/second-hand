@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class RequestOAuthInfoService {
-    private final Map<OAuthProvider, Oauth> clients;
+    private final Map<OAuthProviderV1, Oauth> clients;
 
     public RequestOAuthInfoService(List<Oauth> clients) {
         this.clients = clients.stream().collect(

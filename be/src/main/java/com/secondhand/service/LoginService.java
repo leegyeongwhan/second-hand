@@ -1,6 +1,8 @@
 package com.secondhand.service;
 
 import com.secondhand.domain.login.JwtService;
+import com.secondhand.domain.memberToken.MemberToken;
+import com.secondhand.domain.memberToken.MemberTokenRepository;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.domain.login.Token;
 import com.secondhand.domain.member.*;
@@ -26,7 +28,6 @@ import java.io.IOException;
 @Transactional(readOnly = true)
 public class LoginService {
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final MemberPasswordRepository memberPasswordRepository;
     private final MemberProfileRepository memberProfileRepository;

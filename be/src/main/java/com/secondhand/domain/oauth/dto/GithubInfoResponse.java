@@ -34,9 +34,9 @@ public class GithubInfoResponse implements OAuthInfoResponse {
     public String getEmail() {
         return null;
     }
-
+//TODO github 해결
     @Override
     public OAuthProvider getOAuthProvider() {
-        return OAuthProvider.GITHUB;
+        return OAuthProvider.KAKAO;
     }
 }

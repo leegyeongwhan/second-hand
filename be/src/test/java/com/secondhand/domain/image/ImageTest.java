@@ -1,7 +1,7 @@
 package com.secondhand.domain.image;
 
 import com.secondhand.exception.BadRequestException;
-import com.secondhand.exception.ErrorMessage;
+import com.secondhand.exception.v2.ErrorMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("이미지 테스트")
 class ImageTest {

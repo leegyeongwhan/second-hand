@@ -1,7 +1,7 @@
 package com.secondhand.domain.image;
 
 import com.secondhand.exception.BadRequestException;
-import com.secondhand.exception.ErrorMessage;
+import com.secondhand.exception.v2.ErrorMessage;
 import com.secondhand.exception.InternalServerException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;

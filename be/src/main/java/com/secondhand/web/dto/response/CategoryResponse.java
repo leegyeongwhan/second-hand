@@ -33,6 +33,7 @@ public class CategoryResponse {
                 .categoryId(category.getCategoryId())
                 .imgUrl(category.getImgUrl())
                 .name(category.getName())
+                .placeholder(category.getPlaceholder())
                 .build();
     }
 }

@@ -36,6 +36,7 @@ class CategoryDocumentationTest extends DocumentationTestSupport {
                         .categoryId(1L)
                         .name("전자제품")
                         .imgUrl("test-image-url")
+                        .placeholder("test-모델명,구성품,구매시기")
                         .build()))));
 
         // when
@@ -50,6 +51,7 @@ class CategoryDocumentationTest extends DocumentationTestSupport {
                 .andExpect(jsonPath("success").value("true"))
                 .andExpect(jsonPath("data.categories[0].categoryId").value(1))
                 .andExpect(jsonPath("data.categories[0].name").value("전자제품"))
+                .andExpect(jsonPath("data.categories[0].placeholder").value("test-모델명,구성품,구매시기"))
                 .andExpect(jsonPath("data.categories[0].imgUrl").value("test-image-url"));
 
         // docs
@@ -63,6 +65,7 @@ class CategoryDocumentationTest extends DocumentationTestSupport {
                         fieldWithPath("success").type(BOOLEAN).description("성공 여부"),
                         fieldWithPath("data.categories[*].categoryId").type(NUMBER).description("카테고리 아이디"),
                         fieldWithPath("data.categories[*].name").type(STRING).description("카테고리 이름"),
+                        fieldWithPath("data.categories[*].placeholder").type(STRING).description("카테고리 기타 설명"),
                         fieldWithPath("data.categories[*].imgUrl").type(STRING).description("카테고리 이미지 URL")
                 )));
     }

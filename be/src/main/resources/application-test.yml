@@ -4,3 +4,7 @@ spring:
     username: root
     password: root
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

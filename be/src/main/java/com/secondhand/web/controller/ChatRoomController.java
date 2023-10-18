@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class ChatRoomController {
         CustomSlice<ChatRoomResponse> chatRooms = chatRoomFacadeService.read(userId, pageable, null);
 
         // chatRoomRequests.put(deferredResult, memberId);
-        return BasicResponse.send("채팅방 리스트가 조회되었습니다.", chatRooms);
+        return BasicResponse.send(HttpStatus.OK.value(),"채팅방 리스트가 조회되었습니다.", chatRooms);
     }
 
     @Operation(
@@ -48,7 +49,7 @@ public class ChatRoomController {
     @GetMapping("/rooms/enter/{roomId}")
     public BasicResponse<ChatroomDeatail> roomDetail(Model model, @PathVariable String roomId) {
         ChatroomDeatail roomDetail = chatRoomFacadeService.findRoomDetail();
-        return BasicResponse.send("채팅방 단일 정보가 조회되었습니다..", roomDetail);
+        return BasicResponse.send(HttpStatus.OK.value(),"채팅방 단일 정보가 조회되었습니다..", roomDetail);
     }
 
     //채팅은 아이템에 대해 채팅을 한다.
@@ -61,7 +62,7 @@ public class ChatRoomController {
     @PostMapping("/rooms")
     public BasicResponse<Long> createRoom(@RequestBody ChatRequest chatRequest, @LoginValue long userId) {
         long chatRoomId = chatRoomFacadeService.creatChatRoom(chatRequest.getProductId(), userId);
-        return BasicResponse.send("채팅방이 생성 되었습니다..", chatRoomId);
+        return BasicResponse.send(HttpStatus.OK.value(),"채팅방이 생성 되었습니다..", chatRoomId);
     }
 
 

@@ -35,7 +35,7 @@ public class AuthController {
                                       @NotNullParam(message = "code 값은 반드시 들어와야 합니다.") String code,
                                       @RequestPart @Valid SignUpRequest signupData) {
         authService.signUp(provider, signupData, code, userAgent);
-        return BasicResponse.send("소셜 가입");
+        return BasicResponse.send(HttpStatus.OK.value(),"소셜 가입");
     }
 
 //    @PostMapping("/token")

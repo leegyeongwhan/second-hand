@@ -5,6 +5,7 @@ import com.secondhand.util.BasicResponse;
 import com.secondhand.web.dto.response.CategoryListResponse;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,6 @@ public class CategoryController {
 
     @GetMapping("")
     public BasicResponse<CategoryListResponse> read() {
-        return BasicResponse.send("사용자는 모든 카테고리 목록을 가져올 수 있다", categoryService.readAll());
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자는 모든 카테고리 목록을 가져올 수 있다", categoryService.readAll());
     }
 }

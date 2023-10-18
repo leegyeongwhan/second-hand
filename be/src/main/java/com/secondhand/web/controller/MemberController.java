@@ -17,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +46,7 @@ public class MemberController {
         memberService.setMemberProfileByOauthLogin(memberResponseDTO);
         // jwtService.setTokenHeader(memberProfileResponse, response);
 
-        return BasicResponse.send("깃허브 로그인", memberResponseDTO);
+        return BasicResponse.send(HttpStatus.OK.value(),"깃허브 로그인", memberResponseDTO);
     }
 
     @Operation(
@@ -61,7 +62,7 @@ public class MemberController {
         memberService.setMemberProfileByOauthLogin(memberResponseDTO);
         // jwtService.setTokenHeader(memberProfileResponse, response);
 
-        return BasicResponse.send("카카오 로그인", memberResponseDTO);
+        return BasicResponse.send(HttpStatus.OK.value(),"카카오 로그인", memberResponseDTO);
     }
 
     @Operation(
@@ -71,7 +72,7 @@ public class MemberController {
     public BasicResponse<MemberLoginResponse> join(final @Valid @RequestBody JoinRequest joinRequest) {
         MemberLoginResponse memberResponseDTO = loginService.join(joinRequest);
 
-        return BasicResponse.send("일반 회원가입 로그인", memberResponseDTO);
+        return BasicResponse.send(HttpStatus.OK.value(),"일반 회원가입 로그인", memberResponseDTO);
     }
 
     @Operation(
@@ -82,7 +83,7 @@ public class MemberController {
     public BasicResponse<MemberLoginResponse> signupEmail(@LoginValue long userId, final @Valid @RequestBody SignupSocialRequest signupSocialRequest) {
         MemberLoginResponse memberLoginResponse = loginService.signupEmail(userId, signupSocialRequest);
 
-        return BasicResponse.send("사용자 이메일 추가", memberLoginResponse);
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자 이메일 추가", memberLoginResponse);
     }
 
 
@@ -94,7 +95,7 @@ public class MemberController {
     public BasicResponse<String> updateNickName(@LoginValue long userId, @RequestBody UpdateNickNameRequest nickNameRequest) {
         memberService.updateNickName(userId, nickNameRequest);
 
-        return BasicResponse.send("유저닉네임수정");
+        return BasicResponse.send(HttpStatus.OK.value(),"유저닉네임수정");
     }
 
 
@@ -107,7 +108,7 @@ public class MemberController {
         log.debug("로그아웃 요청");
         loginService.logout(userId);
 
-        return BasicResponse.send("로그아웃 요청");
+        return BasicResponse.send(HttpStatus.OK.value(),"로그아웃 요청");
     }
 
     @Operation(
@@ -119,6 +120,6 @@ public class MemberController {
         log.debug("사용자 id = {} ", userId);
         MemberResponse userInfo = memberService.getUserInfo(userId);
 
-        return BasicResponse.send("사용자 정보를 가져온다", userInfo);
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자 정보를 가져온다", userInfo);
     }
 }

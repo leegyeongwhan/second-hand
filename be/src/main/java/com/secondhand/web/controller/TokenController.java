@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +41,6 @@ public class TokenController {
         ResponseTokens responseTokens = new ResponseTokens(jwtTokenProvider.createToken(member.getId()));
         MemberToken memberToken = memberTokenRepository.findByMemberId(member.getId()).orElseThrow(TokenException::new);
         memberToken.update(responseTokens.getToken().getRefreshToken(), member);
-        return BasicResponse.send("토큰 재발급", responseTokens);
+        return BasicResponse.send(HttpStatus.OK.value(),"토큰 재발급", responseTokens);
     }
 }

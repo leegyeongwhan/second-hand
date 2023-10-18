@@ -12,29 +12,29 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class BasicResponse<T> {
 
-    private boolean success;
-    private HttpStatus httpStatus;
-    private int apiStatus;
-    private T data;
+    private int httpStatus;
     private String message;
+    private int apiStatus;
+    private boolean success;
+    private T data;
 
 
-    public static <T> BasicResponse<T> send(String message, T memberResponseDTO) {
+    public static <T> BasicResponse<T> send(int httpStatus, String message, T memberResponseDTO) {
         return BasicResponse.<T>builder()
                 .success(true)
                 .message(message)
                 .apiStatus(20000)
-                .httpStatus(HttpStatus.OK)
+                .httpStatus(httpStatus)
                 .data(memberResponseDTO)
                 .build();
     }
 
-    public static <T> BasicResponse<T> send(String message) {
+    public static <T> BasicResponse<T> send(int httpStatus, String message) {
         return BasicResponse.<T>builder()
                 .success(true)
                 .message(message)
                 .apiStatus(20000)
-                .httpStatus(HttpStatus.OK)
+                .httpStatus(httpStatus)
                 .build();
     }
 }

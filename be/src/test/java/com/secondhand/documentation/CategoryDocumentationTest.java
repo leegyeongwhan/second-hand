@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
+import static javax.management.openmbean.SimpleType.BOOLEAN;
 import static javax.management.openmbean.SimpleType.STRING;
 import static javax.swing.text.html.parser.DTDConstants.NUMBER;
 import static org.mockito.BDDMockito.given;
@@ -43,22 +44,26 @@ class CategoryDocumentationTest extends DocumentationTestSupport {
         // then
         var resultActions = response
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("statusCode").value(200))
-                .andExpect(jsonPath("message").value("성공했습니다."))
-                .andExpect(jsonPath("data.categories[0].id").value(1))
+                .andExpect(jsonPath("httpStatus").value(200))
+                .andExpect(jsonPath("message").value("사용자는 모든 카테고리 목록을 가져올 수 있다"))
+                .andExpect(jsonPath("apiStatus").value("20000"))
+                .andExpect(jsonPath("success").value("true"))
+                .andExpect(jsonPath("data.categories[0].categoryId").value(1))
                 .andExpect(jsonPath("data.categories[0].name").value("전자제품"))
-                .andExpect(jsonPath("data.categories[0].imageUrl").value("test-image-url"));
+                .andExpect(jsonPath("data.categories[0].imgUrl").value("test-image-url"));
 
         // docs
         resultActions.andDo(document("categories",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
-                        fieldWithPath("statusCode").type(NUMBER).description("응답코드"),
+                        fieldWithPath("httpStatus").type(NUMBER).description("응답코드"),
                         fieldWithPath("message").type(STRING).description("응답 메시지"),
-                        fieldWithPath("data.categories[*].id").type(NUMBER).description("카테고리 아이디"),
+                        fieldWithPath("apiStatus").type(NUMBER).description("메서드 상태 코드"),
+                        fieldWithPath("success").type(BOOLEAN).description("성공 여부"),
+                        fieldWithPath("data.categories[*].categoryId").type(NUMBER).description("카테고리 아이디"),
                         fieldWithPath("data.categories[*].name").type(STRING).description("카테고리 이름"),
-                        fieldWithPath("data.categories[*].imageUrl").type(STRING).description("카테고리 이미지 URL")
+                        fieldWithPath("data.categories[*].imgUrl").type(STRING).description("카테고리 이미지 URL")
                 )));
     }
 }

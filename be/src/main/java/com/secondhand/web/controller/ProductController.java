@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class ProductController {
 
         MainPageResponse mainPageResponse = productQueryService.getProductList(productSearchCondition, userId);
 
-        return BasicResponse.send("사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)", mainPageResponse);
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)", mainPageResponse);
 
     }
 
@@ -58,7 +59,7 @@ public class ProductController {
 
         MainPageCategoryResponse likeProductList = productQueryService.getLikeProductList(condition, pageable, userId);
 
-        return BasicResponse.send("사용자는 자시의 관심 목록을 카테고리 뱔로 확인 가능", likeProductList);
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자는 자시의 관심 목록을 카테고리 뱔로 확인 가능", likeProductList);
 
     }
 
@@ -80,7 +81,7 @@ public class ProductController {
         Product product = productService.findById(productId);
         ProductResponse response = ProductResponse.of(true, product);
 
-        return BasicResponse.send("사용자는상품을 과 관심상품 / 해제 할수 있다.", response);
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자는상품을 과 관심상품 / 해제 할수 있다.", response);
 
     }
 
@@ -95,7 +96,7 @@ public class ProductController {
         log.debug("bdoy  ========================================================== {}", productSaveRequest);
         Long save = productService.save(userId, productSaveRequest);
 
-        return BasicResponse.send("상품 등록.", save);
+        return BasicResponse.send(HttpStatus.OK.value(),"상품 등록.", save);
     }
 
     @Operation(
@@ -109,7 +110,7 @@ public class ProductController {
         productService.update(productId, updateRequest, userId);
         ProductResponse productUpdateResponse = productQueryService.isValidMinePage(productId, userId);
 
-        return BasicResponse.send("상품 수정.", productUpdateResponse);
+        return BasicResponse.send(HttpStatus.OK.value(),"상품 수정.", productUpdateResponse);
     }
 
 
@@ -122,7 +123,7 @@ public class ProductController {
 
         ProductResponse detailPage = productQueryService.getDetailPage(productId, userId);
 
-        return BasicResponse.send("상품 디테일 페이지.", detailPage);
+        return BasicResponse.send(HttpStatus.OK.value(),"상품 디테일 페이지.", detailPage);
     }
 
     @Operation(
@@ -133,6 +134,6 @@ public class ProductController {
     public BasicResponse<String> deleteProduct(@LoginValue long userId, @PathVariable long productId) {
         productService.delete(userId, productId);
 
-        return BasicResponse.send(" 상품 삭제");
+        return BasicResponse.send(HttpStatus.OK.value()," 상품 삭제");
     }
 }

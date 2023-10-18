@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,7 +35,7 @@ public class TownController {
         List<TownResponse> townList = townService.findByAll();
         log.debug("전체 동네 목록을 가져온다 = {}", townList);
 
-        return BasicResponse.send("성공", townList);
+        return BasicResponse.send(HttpStatus.OK.value(), "성공", townList);
     }
 
     @Operation(
@@ -46,7 +47,7 @@ public class TownController {
         List<TownResponse> townDetail = townService.findTownDetail(userId);
         log.debug("사용자가 등록한 동네를 가져올수 있다  = {}", townDetail);
 
-        return BasicResponse.send("사용자가 등록한 동네를 가져올수 있다", townDetail);
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자가 등록한 동네를 가져올수 있다", townDetail);
     }
 
     //TODO : 등록을 숫자로가지고한다? 수정필요
@@ -64,7 +65,7 @@ public class TownController {
 
         townService.save(userId, request.getTownId());
 
-        return BasicResponse.send("사용자의 처음 동네 등록");
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자의 처음 동네 등록");
     }
 
     @Operation(
@@ -81,6 +82,6 @@ public class TownController {
 
         townService.update(userId, townRequest);
 
-        return BasicResponse.send("사용자의 동네 수정");
+        return BasicResponse.send(HttpStatus.OK.value(),"사용자의 동네 수정");
     }
 }

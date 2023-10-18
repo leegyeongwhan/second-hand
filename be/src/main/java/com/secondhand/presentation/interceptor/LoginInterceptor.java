@@ -29,7 +29,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String region = Optional.ofNullable(request.getParameter("region"))
+        String region = Optional.ofNullable(request.getParameter("town"))
                 .orElse("역삼1동");
 
         Long memberId = authenticationContext.getMemberId()

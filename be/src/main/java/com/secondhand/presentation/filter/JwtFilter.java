@@ -23,9 +23,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final List<String> excludeUrlPatterns =
-            List.of("/api/auth/**", "/api/categories");
+            List.of("/api/auth/**");
     private final List<String> excludeGetUrlPatterns =
-            List.of("/api/regions/**", "/api/items/**");
+            List.of("/api/categories/**");
 
     private final JwtTokenProvider jwtProvider;
     private final AuthenticationContext authenticationContext;
@@ -69,7 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = extractToken(request)
                 .orElseThrow(() -> new UnAuthorizedException(ErrorMessage.INVALID_AUTH_HEADER));
-    //    jwtProvider.validateBlackToken(token);
+        //    jwtProvider.validateBlackToken(token);
         jwtProvider.validateToken(token);
         authenticationContext.setMemberId(jwtProvider.extractClaims(token));
 

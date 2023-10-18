@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @MockBean({
         CategoryService.class,
+        ProductService.class,
+        ProductQueryService.class,
         JpaMetamodelMappingContext.class
 })
 @DocumentationTest

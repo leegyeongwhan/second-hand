@@ -85,6 +85,15 @@ public class ProductService {
     }
 
     @Transactional
+    public void delete(long userId, long productId) {
+        Product product = findById(productId);
+        product.checkIsDetailPageMine(userId);
+        if (product.checkIsMine(userId)) {
+            productRepository.delete(product);
+        }
+    }
+
+    @Transactional
     public void changeLike(long productId, long userId) {
         Member member = memberService.findMemberById(userId);
         Product product = findById(productId);
@@ -117,14 +126,7 @@ public class ProductService {
         throw new NotUserMineProductException();
     }
 
-    @Transactional
-    public void delete(long userId, long productId) {
-        Product product = findById(productId);
-        product.checkIsDetailPageMine(userId);
-        if (product.checkIsMine(userId)) {
-            productRepository.delete(product);
-        }
-    }
+
 
     private void checkIsMine(long userId, long product) {
         if (product == userId) {
@@ -136,5 +138,4 @@ public class ProductService {
     public Product findById(long productId) {
         return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
     }
-
 }

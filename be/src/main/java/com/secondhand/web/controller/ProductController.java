@@ -86,17 +86,12 @@ public class ProductController {
     }
 
 
-    @Operation(
-            summary = "상품 등록", description = "사용자는 단일 상품을 등록할 수 있다 저장된 product id반환."
-    )
-    @LoginCheck
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public BasicResponse<Long> save(@LoginValue long userId,
+    public BasicResponse<Long> save(@LoginValue Long userId,
                                     @Valid ProductSaveRequest productSaveRequest) {
-        log.debug("bdoy  ========================================================== {}", productSaveRequest);
         Long save = productService.save(userId, productSaveRequest);
-
-        return BasicResponse.send(HttpStatus.OK.value(),"상품 등록.", save);
+        return BasicResponse.send(HttpStatus.CREATED.value(),"상품 등록.", save);
     }
 
     @Operation(
@@ -105,7 +100,7 @@ public class ProductController {
     @LoginCheck
     @PutMapping("/{productId}")
     public BasicResponse<ProductResponse> update(@LoginValue long userId,
-                                                 @PathVariable long productId,
+                                                 @PathVariable Long productId,
                                                  @Valid @RequestBody ProductUpdateRequest updateRequest) {
         productService.update(productId, updateRequest, userId);
         ProductResponse productUpdateResponse = productQueryService.isValidMinePage(productId, userId);

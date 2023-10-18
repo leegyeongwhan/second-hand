@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @WebMvcTest({
         CategoryController.class,
+        ProductController.class
 })
 @AutoConfigureRestDocs
 public @interface DocumentationTest {

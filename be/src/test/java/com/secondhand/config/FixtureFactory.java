@@ -7,6 +7,9 @@ import com.secondhand.domain.member.Member;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.town.Town;
 import com.secondhand.web.dto.requset.ProductSaveRequest;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.secondhand.config.FixtureBuilderFactory.builderProduct;
 
@@ -32,7 +35,19 @@ public class FixtureFactory {
                 .set("price", productSaveRequest.getPrice())
                 .set("category", category)
                 .set("town", town)
-                .set("member",member)
+                .set("member", member)
                 .sample();
+    }
+
+    public static ProductSaveRequest createProductSaveRequest(List<MultipartFile> productImages) {
+
+        return new ProductSaveRequest(
+                "감자 팝니다",
+                1000000,
+                "맛있는 감자",
+                3L,
+                1L,
+                productImages
+        );
     }
 }

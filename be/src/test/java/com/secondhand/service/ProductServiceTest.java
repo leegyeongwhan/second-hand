@@ -2,7 +2,7 @@ package com.secondhand.service;
 
 import com.secondhand.config.FixtureBuilderFactory;
 import com.secondhand.config.FixtureFactory;
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.product.repository.Image.ImageRepository;
 import com.secondhand.domain.interested.InterestedRepository;
 import com.secondhand.domain.member.Member;

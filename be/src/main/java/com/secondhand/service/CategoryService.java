@@ -1,7 +1,7 @@
 package com.secondhand.service;
 
-import com.secondhand.domain.categorie.Category;
-import com.secondhand.domain.categorie.CategoryRepository;
+import com.secondhand.domain.categoriy.Category;
+import com.secondhand.domain.categoriy.CategoryRepository;
 import com.secondhand.exception.CategoryNotFoundException;
 import com.secondhand.web.dto.response.CategoryListResponse;
 import lombok.RequiredArgsConstructor;

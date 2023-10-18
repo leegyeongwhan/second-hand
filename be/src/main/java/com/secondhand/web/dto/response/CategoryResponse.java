@@ -1,7 +1,7 @@
 package com.secondhand.web.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -61,6 +61,7 @@ public class AuthService {
     public void signUp(OAuthProvider oAuthProvider, SignUpRequest request, String code, String userAgent) {
         verifyDuplicated(request);
 
+        //github naver
         OAuthRequester oAuthRequester = oAuthProvider.getOAuthRequester();
         OauthTokenResponse tokenResponse = oAuthRequester.getToken(code);
         UserProfile userProfile = oAuthRequester.getUserProfile(tokenResponse);

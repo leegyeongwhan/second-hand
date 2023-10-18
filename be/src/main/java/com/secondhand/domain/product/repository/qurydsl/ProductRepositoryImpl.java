@@ -6,7 +6,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.product.Status;
-import com.secondhand.domain.product.repository.qurydsl.ProductCustomRepository;
 import com.secondhand.web.dto.filtercondition.ProductCategorySearchCondition;
 import com.secondhand.web.dto.filtercondition.ProductSearchCondition;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.secondhand.domain.categorie.QCategory.category;
+import static com.secondhand.domain.categoriy.QCategory.category;
 import static com.secondhand.domain.interested.QInterested.interested;
 import static com.secondhand.domain.product.QProduct.product;
 import static com.secondhand.domain.town.QTown.town;

@@ -1,6 +1,6 @@
 package com.secondhand.web.dto.response;
 
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import lombok.Getter;
 
 import java.util.Collections;

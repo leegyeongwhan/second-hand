@@ -1,7 +1,7 @@
 package com.secondhand.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.image.Image;
 import com.secondhand.domain.interested.Interested;
 import com.secondhand.domain.member.Member;

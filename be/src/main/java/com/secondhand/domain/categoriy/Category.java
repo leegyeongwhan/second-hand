@@ -1,4 +1,4 @@
-package com.secondhand.domain.categorie;
+package com.secondhand.domain.categoriy;
 
 import com.secondhand.web.dto.updatedto.CategoryDTO;
 import lombok.*;

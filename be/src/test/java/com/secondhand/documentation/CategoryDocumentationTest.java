@@ -1,6 +1,6 @@
 package com.secondhand.documentation;
 
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import com.secondhand.service.CategoryService;
 import com.secondhand.web.dto.response.CategoryListResponse;
 import org.junit.jupiter.api.DisplayName;

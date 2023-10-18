@@ -32,7 +32,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
-    private final JwtService jwtService;
 
     @Operation(
             summary = "깃허브 로그인", description = "사용자 깃허브를 통한 로그인"

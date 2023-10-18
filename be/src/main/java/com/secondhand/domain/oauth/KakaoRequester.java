@@ -4,7 +4,6 @@ import com.secondhand.domain.login.OAuthRequester;
 import com.secondhand.infrastructure.OauthProperties;
 import com.secondhand.web.dto.login.UserProfile;
 import com.secondhand.web.dto.response.OauthTokenResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

@@ -2,7 +2,7 @@ package com.secondhand.config;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.town.Town;

@@ -3,15 +3,13 @@ package com.secondhand.config;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.member.MemberProfile;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.town.Town;
 import com.secondhand.web.dto.requset.ProductSaveRequest;
 import net.jqwik.api.Arbitraries;
-
-import java.util.List;
 
 public class FixtureBuilderFactory {
 

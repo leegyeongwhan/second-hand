@@ -1,10 +1,9 @@
 package com.secondhand.web.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.secondhand.domain.categorie.Category;
+import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.product.CountInfo;
-import com.secondhand.domain.product.Product;
 import com.secondhand.domain.product.Status;
 import lombok.Builder;
 import lombok.Getter;

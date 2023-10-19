@@ -1,17 +1,14 @@
-//package com.secondhand.service;
-//
-//import com.secondhand.exception.v2.UnAuthorizedException;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.util.Map;
-//
-//@RequiredArgsConstructor
-//@Transactional(readOnly = true)
-//@Service
-//public class TokenService {
-//
+package com.secondhand.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Service
+public class TokenService {
+
 //    private final TokenRepository tokenRepository;
 //    private final JwtProvider jwtProvider;
 //
@@ -25,4 +22,4 @@
 //        }
 //        return new AccessTokenResponse(jwtProvider.createAccessToken(memberId));
 //    }
-//}
+}

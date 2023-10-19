@@ -24,6 +24,4 @@ public class ProductSaveRequest {
     private Long townId;
     @NotNull(message = "상품의 카테고리 아이디를 포함해 요청해주세요.")
     private Long categoryId;
-
-    private List<MultipartFile> productImages;
 }

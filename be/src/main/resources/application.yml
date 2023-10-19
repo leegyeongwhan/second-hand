@@ -1,10 +1,9 @@
   spring:
-    config:
-      import: custom/setting.yml
     profiles:
       active: prod
       include:
         - auth
+        - auth2
         - aws
     jpa:
       properties:

@@ -75,12 +75,12 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product")
     private Set<Interested> interesteds;
 
-    public static Product create(ProductSaveRequest requestInfo, Member member, Category category, Town town) {
+    public static Product create(ProductSaveRequest requestInfo, Member member, Category category, Town town, String thumbnailImage) {
         return Product.builder()
                 .title(requestInfo.getTitle())
                 .content(requestInfo.getContent())
                 .price(requestInfo.getPrice())
-                .thumbnailUrl(requestInfo.getProductImages().get(0).getName())
+                .thumbnailUrl(thumbnailImage)
                 .countLike(0)
                 .countView(0)
                 .status(Status.SELLING)

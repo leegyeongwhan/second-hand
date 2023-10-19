@@ -22,8 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Api(tags = "상품")
@@ -44,7 +46,7 @@ public class ProductController {
 
         MainPageResponse mainPageResponse = productQueryService.getProductList(productSearchCondition, userId);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)", mainPageResponse);
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)", mainPageResponse);
 
     }
 
@@ -59,7 +61,7 @@ public class ProductController {
 
         MainPageCategoryResponse likeProductList = productQueryService.getLikeProductList(condition, pageable, userId);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"사용자는 자시의 관심 목록을 카테고리 뱔로 확인 가능", likeProductList);
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자는 자시의 관심 목록을 카테고리 뱔로 확인 가능", likeProductList);
 
     }
 
@@ -81,17 +83,19 @@ public class ProductController {
         Product product = productService.findById(productId);
         ProductResponse response = ProductResponse.of(true, product);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"사용자는상품을 과 관심상품 / 해제 할수 있다.", response);
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자는상품을 과 관심상품 / 해제 할수 있다.", response);
 
     }
 
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public BasicResponse<Long> save(@LoginValue Long userId,
+        public BasicResponse<Long> save(@RequestPart(required = false) MultipartFile thumbnailImage,
+                                    @RequestPart(required = false) List<MultipartFile> images,
+                                    @LoginValue Long userId,
                                     @Valid ProductSaveRequest productSaveRequest) {
-        Long save = productService.save(userId, productSaveRequest);
-        return BasicResponse.send(HttpStatus.CREATED.value(),"상품 등록.", save);
+        Long save = productService.save(userId, productSaveRequest, thumbnailImage, images);
+        return BasicResponse.send(HttpStatus.CREATED.value(), "상품 등록.", save);
     }
 
     @Operation(
@@ -105,7 +109,7 @@ public class ProductController {
         productService.update(productId, updateRequest, userId);
         ProductResponse productUpdateResponse = productQueryService.isValidMinePage(productId, userId);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"상품 수정.", productUpdateResponse);
+        return BasicResponse.send(HttpStatus.OK.value(), "상품 수정.", productUpdateResponse);
     }
 
 
@@ -118,7 +122,7 @@ public class ProductController {
 
         ProductResponse detailPage = productQueryService.getDetailPage(productId, userId);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"상품 디테일 페이지.", detailPage);
+        return BasicResponse.send(HttpStatus.OK.value(), "상품 디테일 페이지.", detailPage);
     }
 
     @Operation(
@@ -129,6 +133,6 @@ public class ProductController {
     public BasicResponse<String> deleteProduct(@LoginValue long userId, @PathVariable long productId) {
         productService.delete(userId, productId);
 
-        return BasicResponse.send(HttpStatus.OK.value()," 상품 삭제");
+        return BasicResponse.send(HttpStatus.OK.value(), " 상품 삭제");
     }
 }

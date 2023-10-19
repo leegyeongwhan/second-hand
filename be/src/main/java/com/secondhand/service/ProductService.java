@@ -42,16 +42,16 @@ public class ProductService {
     private final ImageService imageService;
 
     @Transactional
-    public Long save(long userId, ProductSaveRequest requestInfo) {
-        if (!isValidThumbnail(requestInfo.getProductImages().get(0))) {
+    public Long save(long userId, ProductSaveRequest requestInfo, MultipartFile thumbnailImage, List<MultipartFile> images) {
+        if (!isValidThumbnail(thumbnailImage)) {
             throw new BadRequestException(ErrorMessage.INVALID_REQUEST, "썸네일 이미지는 반드시 들어와야 합니다.");
         }
-        if (requestInfo.getProductImages() != null && requestInfo.getProductImages().size() > IMAGE_LIST_MAX_SIZE) {
+        if (images != null && images.size() > IMAGE_LIST_MAX_SIZE) {
             throw new BadRequestException(ErrorMessage.INVALID_REQUEST, "썸네일 이미지 외의 이미지는 최대 9개까지 들어올 수 있습니다.");
         }
 
-        String thumbnailUrl = imageService.upload(requestInfo.getProductImages().get(0));
-        List<String> itemImageUrls = imageService.uploadImageList(requestInfo.getProductImages());
+        String thumbnailUrl = imageService.upload(thumbnailImage);
+        List<String> itemImageUrls = imageService.uploadImageList(images);
 
         itemImageUrls = new ArrayList<>(itemImageUrls);
         itemImageUrls.add(thumbnailUrl);
@@ -59,7 +59,7 @@ public class ProductService {
         Category category = categoryService.findById(requestInfo.getCategoryId());
         Town town = townService.findById(requestInfo.getTownId());
         Member member = memberService.findMemberById(userId);
-        Product product = Product.create(requestInfo, member, category, town);
+        Product product = Product.create(requestInfo, member, category, town,thumbnailUrl);
         Product saveProduct = productRepository.save(product);
 
         List<Image> itemImages = itemImageUrls.stream()
@@ -125,7 +125,6 @@ public class ProductService {
         }
         throw new NotUserMineProductException();
     }
-
 
 
     private void checkIsMine(long userId, long product) {

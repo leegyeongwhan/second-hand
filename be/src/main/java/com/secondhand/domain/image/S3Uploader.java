@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@EnableConfigurationProperties(AwsProperties.class)
-@PropertySource("classpath:custom/setting.yml") // 설정정보 위치 생략가능
 public class S3Uploader {
 
     private static final String PUBLIC_IMAGE_DIR = "public/";

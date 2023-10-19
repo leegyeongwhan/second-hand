@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 @Getter
-@ConfigurationProperties(prefix = "auth")
+@ConfigurationProperties(prefix = "auth2")
 public class OauthProperties {
 
     private final Github github;

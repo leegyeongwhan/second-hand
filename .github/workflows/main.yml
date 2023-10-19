@@ -30,11 +30,7 @@ jobs:
 
       - run: |
           
-          mkdir  ./be/src/main/resources/custom
-
-          touch ./be/src/main/resources/custom/setting.yml
-          echo "${{ secrets.SETTING }}" > ./be/src/main/resources/custom/setting.yml
-          
+    
           touch ./be/src/main/resources/application-aws.yml
           echo "${{ secrets.APPLICATION_AWS }}" > ./be/src/main/resources/application-aws.yml
           
@@ -43,6 +39,9 @@ jobs:
           
           touch ./be/src/main/resources/application-auth.yml
           echo "${{ secrets.APPLICATION_AUTH }}" > ./be/src/main/resources/application-auth.yml
+          
+           touch ./be/src/main/resources/application-auth2.yml
+          echo "${{ secrets.APPLICATION_AUTH2 }}" > ./be/src/main/resources/application-auth2.yml
 
       - name: Gradle
         run: |

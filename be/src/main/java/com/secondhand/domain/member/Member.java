@@ -120,4 +120,9 @@ public class Member {
         this.imgUrl = "0";
         this.oauthProvider = "0";
     }
+
+
+    public boolean isSameEmail(String email) {
+        return this.memberProfile.getMemberEmail().equals(email);
+    }
 }

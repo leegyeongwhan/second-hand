@@ -2,6 +2,7 @@ package com.secondhand.domain.memberToken;
 
 import com.secondhand.domain.member.Member;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,7 +33,9 @@ public class MemberToken {
         this.member = member;
     }
 
-    public void removeToken() {
-        this.memberToken = null;
+    @Builder
+    private MemberToken(Member member, String memberToken) {
+        this.member = member;
+        this.memberToken = memberToken;
     }
 }

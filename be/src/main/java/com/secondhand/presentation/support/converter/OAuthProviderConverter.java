@@ -1,4 +1,4 @@
-package com.secondhand.presentation.suport.converter;
+package com.secondhand.presentation.support.converter;
 
 import com.secondhand.domain.oauth.OAuthProvider;
 import org.springframework.core.convert.converter.Converter;

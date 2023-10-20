@@ -1,4 +1,4 @@
-package com.secondhand.presentation.suport;
+package com.secondhand.presentation.support;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

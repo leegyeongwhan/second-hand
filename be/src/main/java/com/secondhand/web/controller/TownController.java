@@ -1,7 +1,7 @@
 package com.secondhand.web.controller;
 
-import com.secondhand.presentation.suport.LoginCheck;
-import com.secondhand.presentation.suport.LoginValue;
+import com.secondhand.presentation.support.LoginCheck;
+import com.secondhand.presentation.support.LoginValue;
 import com.secondhand.service.TownService;
 import com.secondhand.util.BasicResponse;
 import com.secondhand.web.dto.requset.TownRegisterRequest;

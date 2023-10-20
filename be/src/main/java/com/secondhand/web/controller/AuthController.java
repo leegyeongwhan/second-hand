@@ -1,7 +1,7 @@
 package com.secondhand.web.controller;
 
 import com.secondhand.domain.oauth.OAuthProvider;
-import com.secondhand.presentation.suport.NotNullParam;
+import com.secondhand.presentation.support.NotNullParam;
 import com.secondhand.service.AuthService;
 import com.secondhand.service.TokenService;
 import com.secondhand.util.BasicResponse;

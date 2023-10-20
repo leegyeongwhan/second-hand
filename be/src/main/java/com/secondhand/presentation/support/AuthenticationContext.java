@@ -1,7 +1,7 @@
-package com.secondhand.presentation.suport;
-
+package com.secondhand.presentation.support;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +15,7 @@ public class AuthenticationContext {
         return Optional.ofNullable(memberId);
     }
 
+    //일단 이 컨텍스트 이컴포넌트를  주입 받아야하잖아요 config에서
     public void setMemberId(Map<String, Object> claims) {
         this.memberId = Long.valueOf(claims.get("memberId").toString());
     }

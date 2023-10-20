@@ -1,4 +1,4 @@
-package com.secondhand.presentation.suport;
+package com.secondhand.presentation.support;
 
 import com.secondhand.exception.v2.ErrorMessage;
 import com.secondhand.exception.v2.UnAuthorizedException;

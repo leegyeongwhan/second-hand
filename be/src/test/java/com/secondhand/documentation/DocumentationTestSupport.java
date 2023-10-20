@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
-import com.secondhand.presentation.suport.AuthenticationContext;
+import com.secondhand.presentation.support.AuthenticationContext;
 import com.secondhand.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

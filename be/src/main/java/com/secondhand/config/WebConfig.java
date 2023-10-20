@@ -1,9 +1,9 @@
 package com.secondhand.config;
 
 import com.secondhand.presentation.interceptor.LoginInterceptor;
-import com.secondhand.presentation.suport.LoginArgumentResolver;
-import com.secondhand.presentation.suport.NotNullParamArgumentResolver;
-import com.secondhand.presentation.suport.converter.OAuthProviderConverter;
+import com.secondhand.presentation.support.LoginArgumentResolver;
+import com.secondhand.presentation.support.NotNullParamArgumentResolver;
+import com.secondhand.presentation.support.converter.OAuthProviderConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

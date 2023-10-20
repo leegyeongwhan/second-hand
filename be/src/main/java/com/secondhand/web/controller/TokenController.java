@@ -1,8 +1,8 @@
 package com.secondhand.web.controller;
 
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
-import com.secondhand.presentation.suport.LoginCheck;
-import com.secondhand.presentation.suport.LoginValue;
+import com.secondhand.presentation.support.LoginCheck;
+import com.secondhand.presentation.support.LoginValue;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.member.MemberRepository;
 import com.secondhand.domain.memberToken.MemberToken;

@@ -26,9 +26,8 @@ public class AuthController {
     public BasicResponse<LoginResponse> login(@PathVariable OAuthProvider provider,
                                               @RequestBody @Valid LoginRequest request,
                                               @NotNullParam(message = "code 값은 반드시 들어와야 합니다.") String code) {
-        // return new ApiResponse<>(HttpStatus.OK.value(), authService.login(provider, request, code));
         LoginResponse login = authService.login(provider, request, code);
-        return BasicResponse.send(HttpStatus.OK.value(), "깃허브 로그인", login);
+        return BasicResponse.send(HttpStatus.OK.value(), "카카오 로그인", login);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

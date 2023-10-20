@@ -90,11 +90,12 @@ public class ProductController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-        public BasicResponse<Long> save(@RequestPart(required = false) MultipartFile thumbnailImage,
+    public BasicResponse<Long> save(@RequestPart(required = false) MultipartFile thumbnailImage,
                                     @RequestPart(required = false) List<MultipartFile> images,
                                     @LoginValue Long userId,
                                     @Valid ProductSaveRequest productSaveRequest) {
         Long save = productService.save(userId, productSaveRequest, thumbnailImage, images);
+        log.debug("컨트롤러에서의 회원id = {}", userId);
         return BasicResponse.send(HttpStatus.CREATED.value(), "상품 등록.", save);
     }
 

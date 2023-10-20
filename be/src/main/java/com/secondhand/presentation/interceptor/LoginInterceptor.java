@@ -25,6 +25,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        log.debug("인터셉터 수행 = {}");
+        log.debug("resuset", request);
         if (!HttpMethod.GET.matches(request.getMethod())) {
             return true;
         }
@@ -34,6 +36,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         Long memberId = authenticationContext.getMemberId()
                 .orElseThrow(() -> new UnAuthorizedException(ErrorMessage.NOT_LOGIN));
+
         if (!region.equals(NOT_LOGIN_DEFAULT_REGION) && NOT_LOGIN_MEMBER_ID.equals(memberId)) {
             throw new UnAuthorizedException(ErrorMessage.NOT_LOGIN, "로그인되지 않은 상태에서는 역삼 1동 지역만을 볼 수 있습니다.");
         }

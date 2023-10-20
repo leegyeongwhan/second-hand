@@ -39,15 +39,14 @@ public class FixtureFactory {
                 .sample();
     }
 
-    public static ProductSaveRequest createProductSaveRequest(List<MultipartFile> productImages) {
+    public static ProductSaveRequest createProductSaveRequest() {
 
         return new ProductSaveRequest(
                 "감자 팝니다",
                 1000000,
                 "맛있는 감자",
                 3L,
-                1L,
-                productImages
-        );
+                1L
+                );
     }
 }

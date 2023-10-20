@@ -49,21 +49,21 @@ public class MemberController {
         return BasicResponse.send(HttpStatus.OK.value(),"깃허브 로그인", memberResponseDTO);
     }
 
-    @Operation(
-            summary = "카카오 로그인", description = "사용자 카카오를 통한 로그인"
-    )
-    @PostMapping("/auth/kakao/login")
-    public BasicResponse<MemberLoginResponse> kakaoLogin(@RequestHeader(name = "User-Agent") String userAgent,
-                                                         @RequestBody KakaoRequestCode params,
-                                                         HttpServletResponse response) throws IOException {
-        log.debug("프론트로 부터 받은 코드 = {}", params.getAuthorizationCode());
-        log.debug("프론트로 부터 받은 코드 = {}", params.oAuthProvider().name());
-        MemberLoginResponse memberResponseDTO = loginService.login(params, userAgent);
-        memberService.setMemberProfileByOauthLogin(memberResponseDTO);
-        // jwtService.setTokenHeader(memberProfileResponse, response);
-
-        return BasicResponse.send(HttpStatus.OK.value(),"카카오 로그인", memberResponseDTO);
-    }
+//    @Operation(
+//            summary = "카카오 로그인", description = "사용자 카카오를 통한 로그인"
+//    )
+//    @PostMapping("/auth/kakao/login")
+//    public BasicResponse<MemberLoginResponse> kakaoLogin(@RequestHeader(name = "User-Agent") String userAgent,
+//                                                         @RequestBody KakaoRequestCode params,
+//                                                         HttpServletResponse response) throws IOException {
+//        log.debug("프론트로 부터 받은 코드 = {}", params.getAuthorizationCode());
+//        log.debug("프론트로 부터 받은 코드 = {}", params.oAuthProvider().name());
+//        MemberLoginResponse memberResponseDTO = loginService.login(params, userAgent);
+//        memberService.setMemberProfileByOauthLogin(memberResponseDTO);
+//        // jwtService.setTokenHeader(memberProfileResponse, response);
+//
+//        return BasicResponse.send(HttpStatus.OK.value(),"카카오 로그인", memberResponseDTO);
+//    }
 
     @Operation(
             summary = "일반 로그인", description = "사용자 카카오를 통한 로그인"

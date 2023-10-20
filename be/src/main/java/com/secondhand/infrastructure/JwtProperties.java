@@ -1,15 +1,16 @@
-package com.secondhand.infrastructure.jwt;
+package com.secondhand.infrastructure;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 @Getter
-@RequiredArgsConstructor // 롬복 생성자
-@ConstructorBinding
-@ConfigurationProperties(prefix = "jwt") // prefix 설정
+@ConfigurationProperties(prefix = "aws.jwt") // prefix 설정
 public class JwtProperties {
-
     private final String secretKey;
+
+    @ConstructorBinding
+    public JwtProperties(String secretKey) {
+        this.secretKey = secretKey;
+    }
 }

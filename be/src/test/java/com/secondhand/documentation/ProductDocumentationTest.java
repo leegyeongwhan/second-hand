@@ -17,8 +17,7 @@ import java.util.List;
 
 import static com.secondhand.documentation.ConstraintsHelper.withPath;
 import static javax.management.openmbean.SimpleType.BOOLEAN;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -45,23 +44,22 @@ class ProductDocumentationTest extends DocumentationTestSupport {
     @Test
     void saveProduct() throws Exception {
         // given
+
+        ProductSaveRequest request = FixtureFactory.createProductSaveRequest();
+
+        given(productService.save(anyLong(), any(ProductSaveRequest.class), any(MultipartFile.class), anyList()))
+                .willReturn(anyLong());
+
         MockMultipartFile thumbnail = new MockMultipartFile("thumbnailImage", "image.png", "image/png",
                 "<<png data>>".getBytes());
-        MockMultipartFile itemImage = new MockMultipartFile("product", "image.png", "image/png",
+        MockMultipartFile itemImage = new MockMultipartFile("images", "image.png", "image/png",
                 "<<png data>>".getBytes());
-
-        List<MultipartFile> productImages = new ArrayList<>();
-        productImages.add(thumbnail);
-        productImages.add(itemImage);
-
-        ProductSaveRequest request = FixtureFactory.createProductSaveRequest(productImages);
-        MockMultipartFile itemRegisterData = new MockMultipartFile("product", "",
+        MockMultipartFile itemRegisterData = new MockMultipartFile("item", "",
                 MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsBytes(request));
-
-        given(productService.save(anyLong(), any(ProductSaveRequest.class))).willReturn(1L);
 
         // when
         var response = mockMvc.perform(multipart(HttpMethod.POST, "/api/products")
+                .file(thumbnail)
                 .file(itemImage)
                 .file(itemRegisterData)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtProvider.createAccessToken(1L))

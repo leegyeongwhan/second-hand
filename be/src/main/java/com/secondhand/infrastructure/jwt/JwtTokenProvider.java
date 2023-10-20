@@ -6,11 +6,10 @@ import com.secondhand.exception.token.TokenException;
 import com.secondhand.exception.token.TokenNotFoundException;
 import com.secondhand.exception.token.TokenTimeException;
 import com.secondhand.exception.v2.UnAuthorizedException;
+import com.secondhand.infrastructure.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -21,22 +20,17 @@ import java.util.Map;
 
 @Slf4j
 @Component
-@EnableConfigurationProperties(JwtProperties.class)
-@PropertySource("classpath:custom/setting.yml") // 설정정보 위치 생략가능
 public class JwtTokenProvider {
 
-    public static final String SUBJECT_NAME = "login_member";
     public static final int ACCESS_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000;
     public static final long REFRESH_TOKEN_VALID_TIME = 30L * 24 * 60 * 60 * 1000L; // 30일 (long 형식 사용)
     public static final String MEMBER_ID = "memberId";
-    public static final String TOKEN_TYPE = "tokenType";
 
     private final SecretKey secretKey;
 
     public JwtTokenProvider(JwtProperties jwtProperties) {
         this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
-
 
     /**
      * Access Token이 만료가 되면 서버는 만료되었다는 Response를 하게 된다.

@@ -1,7 +1,7 @@
 package com.secondhand.domain.login;
 
 
-import com.secondhand.infrastructure.jwt.JwtProperties;
+import com.secondhand.infrastructure.JwtProperties;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

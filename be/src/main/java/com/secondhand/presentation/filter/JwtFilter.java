@@ -5,7 +5,9 @@ import com.secondhand.infrastructure.jwt.AuthorizationExtractor;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.exception.v2.UnAuthorizedException;
 import com.secondhand.presentation.suport.AuthenticationContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,13 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final List<String> excludeUrlPatterns =
-            List.of("/api/auth/**");
+            List.of("/api/auth/**", "/api/categories");
     private final List<String> excludeGetUrlPatterns =
-            List.of("/api/categories/**");
+            List.of("/api/products/**");
 
     private final JwtTokenProvider jwtProvider;
     private final AuthenticationContext authenticationContext;
@@ -36,10 +39,13 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     //필터적용여뷰
+    //필터링에서 제외시키고 싶은 request에서 true를 반환 하면 된다.
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         HttpMethod method = HttpMethod.resolve(request.getMethod());
+        log.debug("request.getRequestURI() = {}", request.getRequestURI());
         if (method == HttpMethod.GET && isExcludeGetUrl(request.getRequestURI())) {
+            log.debug("shouldNotfilter = {}", authenticationContext.getMemberId());
             extractToken(request).ifPresentOrElse(
                     token -> {
                         jwtProvider.validateToken(token);
@@ -49,8 +55,14 @@ public class JwtFilter extends OncePerRequestFilter {
             return true;
         }
 
-        return excludeUrlPatterns.stream()
+        //일반적인 경우 (GET이 아니거나, 특정 URI 패턴에 매칭되지 않는 경우):
+        // excludeUrlPatterns에 정의된 URI 패턴 중에서 현재 요청의 URI와 매치되는지를 확인합니다.
+        // 만약 매치되면 필터링을 수행하지 않고, true를 반환하여 요청을 무시합니다.
+        //oauth,카테고리를 제외하고 필터링 거친다
+        boolean match = excludeUrlPatterns.stream()
                 .anyMatch(pattern -> pathMatcher.match(pattern, request.getRequestURI()));
+        log.debug("제외되는 필터링= {}", match);
+        return match;
     }
 
     private boolean isExcludeGetUrl(String uri) {
@@ -62,17 +74,18 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        log.debug(" doFilter 수행");
         if (CorsUtils.isPreFlightRequest(request)) {
             filterChain.doFilter(request, response);
             return;
         }
-
         String token = extractToken(request)
                 .orElseThrow(() -> new UnAuthorizedException(ErrorMessage.INVALID_AUTH_HEADER));
         //    jwtProvider.validateBlackToken(token);
         jwtProvider.validateToken(token);
         authenticationContext.setMemberId(jwtProvider.extractClaims(token));
-
+        log.debug("검증된 회원id = {}", authenticationContext.getMemberId());
         filterChain.doFilter(request, response);
     }
 

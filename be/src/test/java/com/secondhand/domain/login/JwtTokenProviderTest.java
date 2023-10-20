@@ -1,7 +1,7 @@
 package com.secondhand.domain.login;
 
 import com.secondhand.exception.v2.ErrorMessage;
-import com.secondhand.infrastructure.jwt.JwtProperties;
+import com.secondhand.infrastructure.JwtProperties;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.exception.v2.UnAuthorizedException;
 import org.junit.jupiter.api.DisplayName;

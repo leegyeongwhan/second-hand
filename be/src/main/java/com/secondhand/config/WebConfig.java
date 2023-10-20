@@ -1,11 +1,10 @@
 package com.secondhand.config;
 
-import com.secondhand.presentation.filter.LogFilter;
-import com.secondhand.presentation.suport.LoginArgumentResolver;
 import com.secondhand.presentation.interceptor.LoginInterceptor;
+import com.secondhand.presentation.suport.LoginArgumentResolver;
+import com.secondhand.presentation.suport.NotNullParamArgumentResolver;
 import com.secondhand.presentation.suport.converter.OAuthProviderConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import reactor.netty.http.client.HttpClient;
 
-import javax.servlet.Filter;
 import java.util.List;
 
 @Configuration
@@ -26,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final LoginInterceptor loginInterceptor;
     private final OAuthProviderConverter oAuthProviderConverter;
+    private final NotNullParamArgumentResolver notNullParamArgumentResolver;
     private final LoginArgumentResolver loginArgumentResolver;
 
     @Override
@@ -33,8 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedHeaders("*")
-                .allowedMethods("*")
-                .maxAge(3000);
+                .allowedMethods("HEAD", "OPTIONS", "GET", "POST", "PUT", "DELETE", "PATCH");
     }
 
     @Bean
@@ -47,21 +45,11 @@ public class WebConfig implements WebMvcConfigurer {
         return WebClient.builder().clientConnector(new ReactorClientHttpConnector(httpClient)).build();
     }
 
-    @Bean
-    public FilterRegistrationBean logFilter() {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new LogFilter());
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/*");
-        return filterRegistrationBean;
-    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/api/products");
     }
-
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(oAuthProviderConverter);
@@ -70,5 +58,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginArgumentResolver);
+        resolvers.add(notNullParamArgumentResolver);
     }
 }

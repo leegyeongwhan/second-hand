@@ -15,11 +15,18 @@ import org.springframework.context.annotation.Configuration;
 public class FilterConfig {
 
     private final JwtTokenProvider jwtProvider;
-    private final AuthenticationContext authenticationContext;
+ //   private final AuthenticationContext authenticationContext;
     private final ObjectMapper objectMapper;
 
-    // AuthExceptionHandlerFilter필터를 거쳐 예외가있는지확인한후
-    // jwt필터를 거친다
+    @Bean
+    public FilterRegistrationBean<JwtFilter> jwtFilter() {
+        FilterRegistrationBean<JwtFilter> jwtFilter = new FilterRegistrationBean<>();
+        jwtFilter.setFilter(new JwtFilter(jwtProvider, context() ));
+        jwtFilter.addUrlPatterns("/api/*");
+        jwtFilter.setOrder(2);
+        return jwtFilter;
+    }
+
     @Bean
     public FilterRegistrationBean<AuthExceptionHandlerFilter> authExceptionHandlerFilter() {
         FilterRegistrationBean<AuthExceptionHandlerFilter> authExceptionHandlerFilter = new FilterRegistrationBean<>();
@@ -30,12 +37,7 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<JwtFilter> jwtFilter() {
-        FilterRegistrationBean<JwtFilter> jwtFilter = new FilterRegistrationBean<>();
-        jwtFilter.setFilter(new JwtFilter(jwtProvider, authenticationContext));
-        jwtFilter.addUrlPatterns("/api/*");
-        jwtFilter.setOrder(2);
-        return jwtFilter;
+    public AuthenticationContext context() {
+        return new AuthenticationContext();
     }
 }
-

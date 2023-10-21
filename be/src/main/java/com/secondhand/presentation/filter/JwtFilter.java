@@ -5,8 +5,10 @@ import com.secondhand.exception.v2.UnAuthorizedException;
 import com.secondhand.infrastructure.jwt.AuthorizationExtractor;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.presentation.support.AuthenticationContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -44,6 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         HttpMethod method = HttpMethod.resolve(request.getMethod());
         log.debug(" shouldNotFilter 수행  = {}", method);
+
         if (method == HttpMethod.GET && isExcludeGetUrl(request.getRequestURI())) {
             extractToken(request).ifPresentOrElse(
                     token -> {
@@ -75,6 +78,8 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         log.debug(" doFilter 수행");
+        log.debug(" shouldNotFilter 수행  = {}", authenticationContext);
+
         if (CorsUtils.isPreFlightRequest(request)) {
             filterChain.doFilter(request, response);
             return;

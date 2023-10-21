@@ -1,5 +1,6 @@
 package com.secondhand.presentation.support;
 
+import io.swagger.annotations.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 

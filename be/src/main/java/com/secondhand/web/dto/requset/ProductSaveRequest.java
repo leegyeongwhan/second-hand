@@ -3,6 +3,7 @@ package com.secondhand.web.dto.requset;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 public class ProductSaveRequest {
     @NotBlank(message = "상품의 제목은 비어있을 수 없습니다.")
     @Size(max = 45, message = "상품 제목의 길이는 45자를 넘을 수 없습니다.")

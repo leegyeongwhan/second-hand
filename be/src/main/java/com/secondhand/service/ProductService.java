@@ -55,18 +55,24 @@ public class ProductService {
 
         itemImageUrls = new ArrayList<>(itemImageUrls);
         itemImageUrls.add(thumbnailUrl);
-
+        log.debug("requestInfo = {}", requestInfo);
         Category category = categoryService.findById(requestInfo.getCategoryId());
+        log.debug("category = {}", category);
         Town town = townService.findById(requestInfo.getTownId());
+        log.debug("town = {}", town);
         Member member = memberService.findMemberById(userId);
-        Product product = Product.create(requestInfo, member, category, town,thumbnailUrl);
+        log.debug("member = {}", member);
+        Product product = Product.create(requestInfo, member, category, town, thumbnailUrl);
+        log.debug("product = {}", product);
         Product saveProduct = productRepository.save(product);
+        log.debug("saveProduct = {}", saveProduct);
 
         List<Image> itemImages = itemImageUrls.stream()
                 .map(url -> Image.of(url, saveProduct))
                 .collect(Collectors.toList());
         imageRepository.saveAllImages(itemImages);
 
+        log.debug("itemImages = {}", itemImages);
         return saveProduct.getId();
     }
 

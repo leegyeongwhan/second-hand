@@ -7,8 +7,6 @@ import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.secondhand.infrastructure.AwsProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.net.URLDecoder;
@@ -25,12 +23,10 @@ public class S3Uploader {
     private final AmazonS3Client s3Client;
     private final String bucket;
 
-    //config에서 받은 설정값 s3클라이언트와 , yml의 프로퍼티를 주입받는다.
     public S3Uploader(AmazonS3Client s3Client, AwsProperties awsProperties) {
         this.s3Client = s3Client;
         this.bucket = awsProperties.getS3().getBucket();
     }
-
 
     public String uploadImageFile(ImageFile imageFile) {
         final String fileName = PUBLIC_IMAGE_DIR + imageFile.getSavedFileName();

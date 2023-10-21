@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
+//@RequestScope
 public class AuthenticationContext {
 
     private Long memberId;

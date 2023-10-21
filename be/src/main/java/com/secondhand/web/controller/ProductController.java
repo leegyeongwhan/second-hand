@@ -28,7 +28,6 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@Api(tags = "상품")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/products")
@@ -37,15 +36,10 @@ public class ProductController {
     private final ProductService productService;
     private final ProductQueryService productQueryService;
 
-    @Operation(
-            summary = "상품 10개씩 리스트", description = "사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리) 좋아요유무.."
-    )
-    @LoginCheck
     @GetMapping
-    public BasicResponse<MainPageResponse> viewPage(ProductSearchCondition productSearchCondition, @LoginValue long userId) {
-
+    public BasicResponse<MainPageResponse> viewPage(ProductSearchCondition productSearchCondition, @LoginValue Long userId) {
+        log.debug("userId = {}", userId);
         MainPageResponse mainPageResponse = productQueryService.getProductList(productSearchCondition, userId);
-
         return BasicResponse.send(HttpStatus.OK.value(), "사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)", mainPageResponse);
 
     }
@@ -65,10 +59,6 @@ public class ProductController {
 
     }
 
-    @Operation(
-            summary = "상품 관심 상품 등록/해제  상품의 상태를 변경할 수 있다", description = "사용자는상품을 과 관심상품 / 해제 할수 있다 또는 특정 상품의 상태를 변경할 수 있다."
-    )
-    @LoginCheck
     @PatchMapping("/{productId}")
     public BasicResponse<ProductResponse> changeLike(final @Valid @RequestBody StatusOrLikeRequest request,
                                                      @PathVariable long productId,
@@ -95,7 +85,6 @@ public class ProductController {
                                     @LoginValue Long userId,
                                     @Valid ProductSaveRequest productSaveRequest) {
         Long save = productService.save(userId, productSaveRequest, thumbnailImage, images);
-        log.debug("컨트롤러에서의 회원id = {}", userId);
         return BasicResponse.send(HttpStatus.CREATED.value(), "상품 등록.", save);
     }
 

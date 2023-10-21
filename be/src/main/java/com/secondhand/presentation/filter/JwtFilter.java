@@ -1,14 +1,12 @@
 package com.secondhand.presentation.filter;
 
 import com.secondhand.exception.v2.ErrorMessage;
+import com.secondhand.exception.v2.UnAuthorizedException;
 import com.secondhand.infrastructure.jwt.AuthorizationExtractor;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
-import com.secondhand.exception.v2.UnAuthorizedException;
 import com.secondhand.presentation.support.AuthenticationContext;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -51,6 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     token -> {
                         jwtTokenProvider.validateToken(token);
                         authenticationContext.setMemberId(jwtTokenProvider.extractClaims(token));
+                        log.debug(" shouldNotFilter 수행 id  = {}", authenticationContext.getMemberId());
                     },
                     () -> authenticationContext.setMemberId(Map.of("memberId", -1L)));
             return true;

@@ -74,6 +74,7 @@ class ProductDocumentationTest extends DocumentationTestSupport {
                 .andExpect(jsonPath("success").value("true"))
                 .andExpect(jsonPath("data").value(1L)); // 상품 ID를 반환하므로 data 필드에 1L이 와야 합니다.
 
+
         // docs
         resultActions.andDo(document("product/save",
                 preprocessRequest(prettyPrint()),

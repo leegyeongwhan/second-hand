@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
 
+import com.secondhand.domain.chat.service.ChatRoomService;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.presentation.support.AuthenticationContext;
 import com.secondhand.service.*;
@@ -20,7 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
         CategoryService.class,
         ProductService.class,
         ProductQueryService.class,
-        JpaMetamodelMappingContext.class
+        TownService.class,
+        TokenService.class,
+        ChatRoomService.class,
+        AuthService.class,
+        ImageService.class,
+        MemberService.class
 })
 @DocumentationTest
 public abstract class DocumentationTestSupport {
@@ -43,4 +49,5 @@ public abstract class DocumentationTestSupport {
         given(authenticationContext.getMemberId()).willReturn(Optional.of(1L));
     }
 }
+
 

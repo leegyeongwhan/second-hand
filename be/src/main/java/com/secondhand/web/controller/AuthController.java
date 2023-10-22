@@ -32,12 +32,12 @@ public class AuthController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/{provider}/signup")
-    public BasicResponse<Long> signUp(@RequestHeader(name = "User-Agent") String userAgent,
-                                      @PathVariable OAuthProvider provider,
-                                      @NotNullParam(message = "code 값은 반드시 들어와야 합니다.") String code,
-                                      @RequestPart @Valid SignUpRequest signupData) {
+    public BasicResponse<Valid> signUp(@RequestHeader(name = "User-Agent") String userAgent,
+                                       @PathVariable OAuthProvider provider,
+                                       @NotNullParam(message = "code 값은 반드시 들어와야 합니다.") String code,
+                                       @RequestBody @Valid SignUpRequest signupData) {
         authService.signUp(provider, signupData, code, userAgent);
-        return BasicResponse.send(HttpStatus.OK.value(), "소셜 가입");
+        return BasicResponse.send(HttpStatus.CREATED.value(), "소셜 가입");
     }
 
 //    @PostMapping("/token")

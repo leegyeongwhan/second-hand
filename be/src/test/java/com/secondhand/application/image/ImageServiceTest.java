@@ -52,7 +52,7 @@ class ImageServiceTest {
             images.add(createMockMultipartFile("test.png", MediaType.IMAGE_PNG_VALUE));
         }
 
-        given(s3Uploader.uploadImageFiles(anyList())).willReturn(List.of("1", "2", "3", "4", "5"));
+        given(s3Uploader.uploadImageFiles(anyList())).willReturn(List.of("url1", "url2", "url3", "url", "url5"));
 
         // when & then
         assertThatCode(() -> imageService.uploadImageList(images)).doesNotThrowAnyException();

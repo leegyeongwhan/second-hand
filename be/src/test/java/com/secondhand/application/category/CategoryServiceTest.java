@@ -1,5 +1,6 @@
 package com.secondhand.application.category;
 
+import com.secondhand.application.ApplicationTestSupport;
 import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.categoriy.CategoryRepository;
 import com.secondhand.service.CategoryService;
@@ -11,18 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("카테고리 서비스 테스트")
-class CategoryServiceTest {
+class CategoryServiceTest extends ApplicationTestSupport {
 
     @Autowired
     private CategoryService categoryService;
-    private CategoryRepository categoryRepository;
 
     @DisplayName("카테고리 목록을 반환한다.")
     @Test
     void read() {
         // given
         for (int i = 0; i < 18; i++) {
-            categoryRepository.save(Category.builder()
+            supportRepository.save(Category.builder()
                     .name("test" + i)
                     .imgUrl("test-img")
                     .placeholder("가구, 좋아")

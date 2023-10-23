@@ -60,8 +60,7 @@ public class AuthService {
         //  List<AddressData> addressData = residenceService.readResidenceOfMember(memberId);
         return new LoginResponse(
                 new AuthToken(jwtProvider.createAccessToken(memberId), refreshToken),
-                new UserResponse(member.getLoginName(), member.getImgUrl(), String.valueOf(oAuthProvider.getOAuthRequester()))
-        );
+                new UserResponse(member.getLoginName(), member.getImgUrl()));
     }
 
     private Member verifyUser(LoginRequest request, UserProfile userProfile) {

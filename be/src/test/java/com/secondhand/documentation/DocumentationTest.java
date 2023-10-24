@@ -1,5 +1,8 @@
 package com.secondhand.documentation;
 
+import com.secondhand.presentation.controller.AuthController;
+import com.secondhand.presentation.controller.CategoryController;
+import com.secondhand.presentation.controller.ProductController;
 import com.secondhand.web.controller.*;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

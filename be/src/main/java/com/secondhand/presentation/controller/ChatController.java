@@ -1,4 +1,4 @@
-package com.secondhand.web.controller;
+package com.secondhand.presentation.controller;
 
 import com.secondhand.domain.chat.ChatMessage;
 import com.secondhand.domain.chat.repository.ChatRoomRedisRepository;

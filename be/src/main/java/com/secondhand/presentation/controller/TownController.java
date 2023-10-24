@@ -1,4 +1,4 @@
-package com.secondhand.web.controller;
+package com.secondhand.presentation.controller;
 
 import com.secondhand.presentation.support.LoginCheck;
 import com.secondhand.presentation.support.LoginValue;

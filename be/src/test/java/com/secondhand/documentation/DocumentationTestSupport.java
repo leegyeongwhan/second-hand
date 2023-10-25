@@ -1,21 +1,18 @@
 package com.secondhand.documentation;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.Optional;
-
-import com.secondhand.domain.chat.service.ChatRoomService;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.presentation.support.AuthenticationContext;
 import com.secondhand.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 
 @MockBean({
         CategoryService.class,
@@ -23,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
         ProductQueryService.class,
         TownService.class,
         TokenService.class,
-        ChatRoomService.class,
         AuthService.class,
         ImageService.class,
         MemberService.class

@@ -1,6 +1,5 @@
 package com.secondhand.testcontainers;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -17,6 +16,7 @@ import java.util.Set;
 @Profile("test")
 @Component
 public class DatabaseInitializer {
+
     private static final String TRUNCATE_QUERY = "TRUNCATE TABLE %s";
     private static final String AUTO_INCREMENT_INIT_QUERY = "ALTER TABLE %s AUTO_INCREMENT = 1";
 

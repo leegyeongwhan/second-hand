@@ -1,17 +1,17 @@
 package com.secondhand.presentation.controller;
 
 import com.secondhand.service.ImageService;
-import com.secondhand.web.dto.response.ImageResponse;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @Slf4j
-@Api(tags = "상품 이미지")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/images")

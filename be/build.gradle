@@ -65,8 +65,8 @@ dependencies {
    // testImplementation 'org.testcontainers:testcontainers:1.17.6' // Use the latest version
 
     //Swagger
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+//    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+//    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
     // REST Docs
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'

@@ -1,8 +1,8 @@
 package com.secondhand.presentation.controller;
 
+import com.secondhand.domain.product.Product;
 import com.secondhand.presentation.support.LoginCheck;
 import com.secondhand.presentation.support.LoginValue;
-import com.secondhand.domain.product.Product;
 import com.secondhand.service.ProductQueryService;
 import com.secondhand.service.ProductService;
 import com.secondhand.util.BasicResponse;
@@ -14,8 +14,6 @@ import com.secondhand.web.dto.requset.StatusOrLikeRequest;
 import com.secondhand.web.dto.response.MainPageCategoryResponse;
 import com.secondhand.web.dto.response.MainPageResponse;
 import com.secondhand.web.dto.response.ProductResponse;
-import io.swagger.annotations.Api;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -44,9 +42,6 @@ public class ProductController {
 
     }
 
-    @Operation(
-            summary = "관심 목록을 카테고리 별로 확인", description = "사용자는 자시의 관심 목록을 카테고리 뱔로 확인 가능."
-    )
     @LoginCheck
     @GetMapping("/like")
     public BasicResponse<MainPageCategoryResponse> productLikeCategoryView(ProductCategorySearchCondition condition,
@@ -88,9 +83,7 @@ public class ProductController {
         return BasicResponse.send(HttpStatus.CREATED.value(), "상품 등록.", save);
     }
 
-    @Operation(
-            summary = "상품 수정", description = "사용자는 단일 상품을 수정할 수 있다."
-    )
+
     @LoginCheck
     @PutMapping("/{productId}")
     public BasicResponse<ProductResponse> update(@LoginValue long userId,
@@ -103,9 +96,6 @@ public class ProductController {
     }
 
 
-    @Operation(
-            summary = "상품 디테일 페이지", description = "사용자는 단일 상품을 조회할 수 있다."
-    )
     @LoginCheck
     @GetMapping("/{productId}")
     public BasicResponse<ProductResponse> readDetail(@LoginValue long userId, @PathVariable long productId) {
@@ -115,9 +105,6 @@ public class ProductController {
         return BasicResponse.send(HttpStatus.OK.value(), "상품 디테일 페이지.", detailPage);
     }
 
-    @Operation(
-            summary = "상품 삭제", description = "사용자는 단일 상품 삭제 가능합니다.."
-    )
     @LoginCheck
     @DeleteMapping("/{productId}")
     public BasicResponse<String> deleteProduct(@LoginValue long userId, @PathVariable long productId) {

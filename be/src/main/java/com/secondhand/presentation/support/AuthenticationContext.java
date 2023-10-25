@@ -1,6 +1,5 @@
 package com.secondhand.presentation.support;
 
-import io.swagger.annotations.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -8,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-//@RequestScope
+@RequestScope
 public class AuthenticationContext {
 
     private Long memberId;

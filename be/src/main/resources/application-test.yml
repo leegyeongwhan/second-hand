@@ -1,41 +1,53 @@
+#spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    show-sql: true
+#    database: mysql   # 추가 해준 부분
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect # 추가 해준 부분
+#  datasource:
+#    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+#    url: jdbc:tc:mysql:8.0.22:///secondhand-db #?TC_INITSCRIPT=src/main/resources/db/schema.sql
+#  cache:
+#    type: redis
+#    redis:
+#      time-to-live: 3600
+#      cache-null-values: true
+#      host: localhost
+#      port: 6379
+#
+
 spring:
+  datasource:
+    url: jdbc:tc:mysql:8.0.34:///second_hand
+    username: root
+    password: root
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
-    database: mysql   # 추가 해준 부분
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect # 추가 해준 부분
-  datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8.0.22:///secondhand-db #?TC_INITSCRIPT=src/main/resources/db/schema.sql
-  cache:
-    type: redis
-    redis:
-      time-to-live: 3600
-      cache-null-values: true
-      host: localhost
-      port: 6379
 
-#jwt:
-#  secret-key: 2901ujr9021urf0u902hf021y90fh9c210hg093hg091h3g90h30gh901hg09h01
-#cloud:
-#  aws:
-#    credentials:
-#      access-key: access-key
-#      secret-key: secret-key
-#    s3:
-#      bucket: bucket
-#    region:
-#      static: static
-#    stack:
-#      auto: false
-#
-#oauth2:
-#  kakao:
-#    user:
-#      client-id: client-id
-#      client-secret: client-secret
-#      redirect-url: redirect-url
-#    provider:
-#      token-url: token-url
-#      user-info-url: user-info-url
+jwt:
+  secret-key: 2901ujr9021urf0u902hf021y90fh9c210hg093hg091h3g90h30gh901hg09h01
+cloud:
+  aws:
+    credentials:
+      access-key: access-key
+      secret-key: secret-key
+    s3:
+      bucket: bucket
+    region:
+      static: static
+    stack:
+      auto: false
+
+oauth2:
+  kakao:
+    user:
+      client-id: client-id
+      client-secret: client-secret
+      redirect-url: redirect-url
+    provider:
+      token-url: token-url
+      user-info-url: user-info-url

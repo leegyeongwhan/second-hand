@@ -1,6 +1,9 @@
 package com.secondhand.presentation.controller;
 
 import com.secondhand.domain.oauth.OAuthProvider;
+import com.secondhand.presentation.dto.token.AccessTokenResponse;
+import com.secondhand.presentation.dto.token.LogoutRequest;
+import com.secondhand.presentation.dto.token.TokenRenewRequest;
 import com.secondhand.presentation.support.NotNullParam;
 import com.secondhand.service.AuthService;
 import com.secondhand.service.TokenService;
@@ -12,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
@@ -40,15 +44,16 @@ public class AuthController {
         return BasicResponse.send(HttpStatus.CREATED.value(), "소셜 가입");
     }
 
-//    @PostMapping("/token")
-//    public ApiResponse<AccessTokenResponse> renewAccessToken(@Valid @RequestBody TokenRenewRequest request) {
-//        return new ApiResponse<>(HttpStatus.OK.value(), tokenService.renewAccessToken(request.getRefreshToken()));
-//    }
-//
-//    @PostMapping("/logout")
-//    public ApiResponse<Void> logout(HttpServletRequest request,
-//                                    @Valid @RequestBody LogoutRequest logoutRequest) {
-//        authService.logout(request, logoutRequest.getRefreshToken());
-//        return new ApiResponse<>(HttpStatus.OK.value());
-//    }
+    @PostMapping("/token")
+    public BasicResponse<AccessTokenResponse> renewAccessToken(@Valid @RequestBody TokenRenewRequest request) {
+        return BasicResponse.send(HttpStatus.OK.value(), "토큰 재요청", tokenService.renewAccessToken(request.getRefreshToken()));
+    }
+
+    @PostMapping("/logout")
+    public BasicResponse<Void> logout(HttpServletRequest request,
+                                    @Valid @RequestBody LogoutRequest logoutRequest) {
+        authService.logout(request, logoutRequest.getRefreshToken());
+        return BasicResponse.send(HttpStatus.OK.value(), "로그 아웃");
+
+    }
 }

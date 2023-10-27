@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ExtendWith(DatabaseInitializerExtension.class)
-@ActiveProfiles("test")
 @SpringBootTest
+@ActiveProfiles("test")
 public @interface ApplicationTest {
 }

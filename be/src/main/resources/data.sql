@@ -130,3 +130,11 @@ create table chat_log
     constraint fk_chat_room_id
         foreign key (chat_room_id) references chat_room (chat_room_id)
 );
+
+CREATE TABLE  member_token
+(
+    member_id BIGINT       NOT NULL,
+    member_token     VARCHAR(256) NOT NULL,
+    PRIMARY KEY (member_id)
+)
+

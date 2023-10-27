@@ -1,17 +1,12 @@
 package com.secondhand.domain.town;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Town {
 
     @Id
@@ -28,4 +23,11 @@ public class Town {
     @Column(length = 45, nullable = false)
     private String district;
 
+    @Builder
+    public Town(Long townId, String city, String county, String district) {
+        this.townId = townId;
+        this.city = city;
+        this.county = county;
+        this.district = district;
+    }
 }

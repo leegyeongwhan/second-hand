@@ -21,9 +21,9 @@ public class FixtureBuilderFactory {
     private static String[] nameList = {"감자1", "감자2", "감자3", "감자4"};
     private static String[] contentList = {"안녕하세요1", "안녕하세요2", "안녕하세요3"};
     private static String[] imageList = {"사진1", "사진2", "사진3", "사진4"};
-    private static String[] townList = {"신촌", "홍대", "강남", "강북", "강서", "강동", "서초", "서대문", "마포", "종로", "용산", "성동", "성북", "중랑", "중구", "동대문", "동작", "관악"};
-    private static String[] countyList = {"Suffolk", "Los Angeles County", "Cook"};
-    private static String[] districtList = {"Manhattan", "Hollywood", "Downtown Chicago"};
+    private static String[] townList = {"서울"};
+    private static String[] countyList = {"강남구"};
+    private static String[] districtList = {"역삼1동", "역삼2동", "세곡동"};
     private static String[] categoryList = {"전자", "가구", "유아"};
     private static String[] etcList = {"판매중", "세일중", "판매"};
 
@@ -82,8 +82,8 @@ public class FixtureBuilderFactory {
 
     public static ArbitraryBuilder<Town> builderTown() {
         return fixtureMonkey.giveMeBuilder(Town.class)
-                .set("city", pickRandomString(townList))
-                .set("county", pickRandomString(countyList))
+                .set("city", "서울")
+                .set("county","강남구")
                 .set("district", pickRandomString(districtList));
     }
 

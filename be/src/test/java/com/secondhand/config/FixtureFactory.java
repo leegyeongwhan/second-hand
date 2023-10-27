@@ -1,11 +1,16 @@
 package com.secondhand.config;
 
+import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.member.Member;
+import com.secondhand.domain.member.MemberPassword;
+import com.secondhand.domain.member.MemberProfile;
+import com.secondhand.domain.oauth.dto.OAuthInfoResponse;
 import com.secondhand.domain.product.Product;
 import com.secondhand.domain.town.Town;
+import com.secondhand.web.dto.login.UserProfile;
 import com.secondhand.web.dto.requset.ProductSaveRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +27,6 @@ public class FixtureFactory {
 
 
     public static Product buildProductWithId(long id) {
-
         return builderProduct()
                 .set("id", id)
                 .sample();
@@ -47,6 +51,26 @@ public class FixtureFactory {
                 "맛있는 감자",
                 3L,
                 1L
-                );
+        );
+    }
+
+    public static Member createMember() {
+        return Member.builder()
+                .loginName("감자")
+                .imgUrl("image-url")
+                .oauthProvider("oauthProvider")
+                .memberProfile(createMemberProfile())
+                .build();
+    }
+
+    public static MemberProfile createMemberProfile() {
+        return MemberProfile.builder()
+                .memberEmail("감자@kakao.com")
+                .build();
+    }
+
+    public static Town createMemberTown() {
+        return Town.builder().city("서울")
+                .county("강남구").district("역삼1동").build();
     }
 }

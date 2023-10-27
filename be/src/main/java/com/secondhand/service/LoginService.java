@@ -1,17 +1,16 @@
 package com.secondhand.service;
 
-import com.secondhand.domain.login.JwtService;
-import com.secondhand.domain.memberToken.MemberToken;
-import com.secondhand.domain.memberToken.MemberTokenRepository;
-import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.domain.login.Token;
 import com.secondhand.domain.member.*;
+import com.secondhand.domain.memberToken.MemberToken;
+import com.secondhand.domain.memberToken.MemberTokenRepository;
 import com.secondhand.domain.oauth.RequestOAuthInfoService;
 import com.secondhand.domain.oauth.dto.OAuthInfoResponse;
 import com.secondhand.domain.oauth.dto.req.OAuthLoginParams;
 import com.secondhand.exception.JoinException;
 import com.secondhand.exception.MemberNotFoundException;
 import com.secondhand.exception.token.RefreshTokenNotFoundException;
+import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.web.dto.requset.JoinRequest;
 import com.secondhand.web.dto.requset.SignupSocialRequest;
 import com.secondhand.web.dto.response.MemberLoginResponse;
@@ -44,9 +43,6 @@ public class LoginService {
         if (isMemberEmailExists(oAuthInfoResponse.getEmail())) {
             Member member = findMemberByEmail(oAuthInfoResponse.getEmail());
             Token jwtToken = jwtTokenProvider.createToken(member.getId());
-            MemberToken memberToken = memberTokenRepository.findByMemberId(member.getId())
-                    .orElseThrow(RefreshTokenNotFoundException::new);
-            memberToken.update(jwtToken.getRefreshToken(), member);
             log.debug("jwtToken = {}", jwtToken);
             log.debug("기존에 있던 회원 ==========================");
             return MemberLoginResponse.of(member, jwtToken);
@@ -59,9 +55,6 @@ public class LoginService {
             log.debug("member id  = {}", findMember.getId());
             findMember.update(oAuthInfoResponse);
             Token jwtToken = jwtTokenProvider.createToken(findMember.getId());
-            MemberToken memberToken = memberTokenRepository.findByMemberId(findMember.getId())
-                    .orElseThrow(RefreshTokenNotFoundException::new);
-            memberToken.update(jwtToken.getRefreshToken(), findMember);
             log.debug("getAccessToken토큰  = {}", jwtToken.getAccessToken());
             log.debug("getRefreshToken토큰  = {}", jwtToken.getRefreshToken());
             return MemberLoginResponse.of(findMember, jwtToken);
@@ -73,9 +66,11 @@ public class LoginService {
         MemberProfile memberProfile = memberProfileRepository.save(new MemberProfile(oAuthInfoResponse.getEmail()));
         Member member = memberRepository.save(Member.create(oAuthInfoResponse, memberProfile, townService.findById(1L)));
         Token jwtToken = jwtTokenProvider.createToken(member.getId());
-        MemberToken memberToken = memberTokenRepository.save(new MemberToken(jwtToken.getRefreshToken(), member));
+        memberTokenRepository.save(MemberToken.builder()
+                .memberId(member.getId())
+                .memberToken(jwtToken.getRefreshToken())
+                .build());
         log.debug("새로 만든 jwt 토큰 = {}", jwtToken);
-        log.debug("회원이 저장할 refresh token = {}", memberToken.getMemberToken());
         log.debug("새로 생긴  회원 ==========================");
         return MemberLoginResponse.of(member, jwtToken);
     }
@@ -91,8 +86,12 @@ public class LoginService {
         Member member = memberRepository.save(Member.create(joinRequest.getNickName(),
                 "GENERAL", memberProfile, memberPassword, townService.findById(1L)));
 
+
         Token jwtToken = jwtTokenProvider.createToken(member.getId());
-        memberTokenRepository.save(new MemberToken(jwtToken.getRefreshToken(), member));
+        memberTokenRepository.save(MemberToken.builder()
+                .memberId(member.getId())
+                .memberToken(jwtToken.getRefreshToken())
+                .build());
         log.debug("jwt token = {}", jwtToken);
         log.debug("새로운 맴버 생성 = {}", member);
         return MemberLoginResponse.of(member, jwtToken);
@@ -114,7 +113,10 @@ public class LoginService {
                     memberProfile, member.getMemberPassword()));
 
             Token jwtToken = jwtTokenProvider.createToken(saveMember.getId());
-            memberTokenRepository.save(new MemberToken(jwtToken.getRefreshToken(), saveMember));
+            memberTokenRepository.save(MemberToken.builder()
+                    .memberId(saveMember.getId())
+                    .memberToken(jwtToken.getRefreshToken())
+                    .build());
 
             resetRecord(userId);
             return MemberLoginResponse.of(member, jwtToken);
@@ -124,9 +126,6 @@ public class LoginService {
 
     private void resetRecord(long userId) {
         Member member = findMemberById(userId);
-        MemberToken temporaryMemberToken = memberTokenRepository.findByMemberId(userId)
-                .orElseThrow(RefreshTokenNotFoundException::new);
-        temporaryMemberToken.update("0", member);
         member.resetUpdateEntity();
     }
 

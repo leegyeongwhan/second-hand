@@ -48,6 +48,15 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private Set<Interested> interesteds = new HashSet<>();
 
+    @Builder
+    private Member(Long id, String loginName, String imgUrl, String oauthProvider, MemberProfile memberProfile, Town mainTown) {
+        this.id = id;
+        this.loginName = loginName;
+        this.imgUrl = imgUrl;
+        this.oauthProvider = oauthProvider;
+        this.memberProfile = memberProfile;
+        this.mainTown = mainTown;
+    }
 
     //Ouath로그인
     public static Member create(OAuthInfoResponse memberInfo, MemberProfile memberProfile, Town mainTown) {
@@ -99,20 +108,9 @@ public class Member {
         this.subTown = subTown;
     }
 
-    public void updateMainTowns(Town mainTown) {
-        this.mainTown = mainTown;
-    }
 
     public void updateNickName(String nickName) {
         this.loginName = nickName;
-    }
-
-    public void updateEmail(String email) {
-        this.memberProfile.setEmail(email);
-    }
-
-    public boolean checkProductIsMine(long id) {
-        return this.getId() == id;
     }
 
     public void resetUpdateEntity() {
@@ -120,7 +118,6 @@ public class Member {
         this.imgUrl = "0";
         this.oauthProvider = "0";
     }
-
 
     public boolean isSameEmail(String email) {
         return this.memberProfile.getMemberEmail().equals(email);

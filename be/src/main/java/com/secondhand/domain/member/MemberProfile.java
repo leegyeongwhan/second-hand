@@ -1,5 +1,7 @@
 package com.secondhand.domain.member;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberProfile {
 
     @Id
@@ -28,4 +30,9 @@ public class MemberProfile {
         this.memberEmail = email;
     }
 
+    @Builder
+    private MemberProfile(Long id, String memberEmail) {
+        this.id = id;
+        this.memberEmail = memberEmail;
+    }
 }

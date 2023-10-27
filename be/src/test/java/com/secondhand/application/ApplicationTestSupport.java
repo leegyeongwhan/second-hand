@@ -1,6 +1,7 @@
 package com.secondhand.application;
 
 import com.secondhand.domain.image.S3Uploader;
+import com.secondhand.domain.oauth.KakaoRequester;
 import com.secondhand.testcontainers.SupportRepository;
 import com.secondhand.testcontainers.TestContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,5 +15,8 @@ public abstract class ApplicationTestSupport extends TestContainer {
 
     @Autowired
     protected SupportRepository supportRepository;
+
+    @MockBean
+    protected KakaoRequester kakaoRequester;
 }
 

@@ -112,5 +112,5 @@ public class AuthService {
     private Member saveMember(SignUpRequest request, UserProfile userProfile, String oAuthProvider, MemberProfile memberProfile) {
         Town town = townService.findById(1L);
         return memberRepository.save(request.toMemberEntity(userProfile, oAuthProvider, memberProfile, town));
-    }
+}
 }

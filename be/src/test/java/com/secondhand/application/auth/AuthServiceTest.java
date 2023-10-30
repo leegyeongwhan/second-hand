@@ -1,26 +1,27 @@
 package com.secondhand.application.auth;
 
 import com.secondhand.application.ApplicationTestSupport;
-import com.secondhand.config.FixtureFactory;
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.member.MemberProfile;
 import com.secondhand.domain.memberToken.MemberToken;
 import com.secondhand.domain.oauth.OAuthProvider;
+import com.secondhand.exception.v2.ErrorMessage;
 import com.secondhand.exception.v2.UnAuthorizedException;
 import com.secondhand.service.AuthService;
 import com.secondhand.web.dto.login.UserProfile;
 import com.secondhand.web.dto.login.request.LoginRequest;
 import com.secondhand.web.dto.login.response.LoginResponse;
 import com.secondhand.web.dto.response.OauthTokenResponse;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -39,13 +40,7 @@ public class AuthServiceTest extends ApplicationTestSupport {
         @Test
         void givenLoginData_whenLogin_thenSuccess() {
             // given
-            given(kakaoRequester.getToken(anyString()))
-                    .willReturn(new OauthTokenResponse("xxx.xxx.xxx", "scope", "bearer"));
-            given(kakaoRequester.getUserProfile(any(OauthTokenResponse.class)))
-                    .willReturn(UserProfile.builder()
-                            .email("gamja@naver.com")
-                            .profileUrl("url")
-                            .build());
+            mockingOAuthInfo();
 
             LoginRequest request = new LoginRequest("gamja");
 
@@ -78,19 +73,14 @@ public class AuthServiceTest extends ApplicationTestSupport {
         @Test
         void givenLoginDataAndAlreadyHasRefreshToken_whenLogin_thenSuccess() {
             // given
-            given(kakaoRequester.getToken(anyString()))
-                    .willReturn(new OauthTokenResponse("xxx.xxx.xxx", "scope", "bearer"));
-            given(kakaoRequester.getUserProfile(any(OauthTokenResponse.class)))
-                    .willReturn(UserProfile.builder()
-                            .email("gamja@naver.com")
-                            .profileUrl("url")
-                            .build());
+            mockingOAuthInfo();
+
+            LoginRequest request = new LoginRequest("gamja");
 
             MemberProfile profile = supportRepository.save(MemberProfile.builder()
                     .memberEmail("gamja@naver.com")
                     .build());
 
-            LoginRequest request = new LoginRequest("joy");
             supportRepository.save(Member.builder()
                     .loginName("gamja")
                     .imgUrl("url")
@@ -111,40 +101,51 @@ public class AuthServiceTest extends ApplicationTestSupport {
                     .isNotEqualTo("token.token.token");
         }
 
-//        @DisplayName("아이디는 존재하지만 해당 아이디의 이메일과 Naver 이메일 정보가 일치하지 않는 로그인 정보가 주어지면 예외를 던진다.")
-//        @Test
-//        void givenInvalidLoginData_whenLogin_thenThrowsException() {
-//            // given
-//            mockingOAuthInfo();
-//
-//            LoginRequest request = new LoginRequest("joy");
-//            supportRepository.save(Member.builder()
-//                    .email("joooy@naver.com")
-//                    .loginId("joy")
-//                    .profileUrl("url")
-//                    .build());
-//
-//            // when & then
-//            assertThatThrownBy(() -> authService.login(OAuthProvider.NAVER, request, "code"))
-//                    .isInstanceOf(UnAuthorizedException.class)
-//                    .extracting("errorCode").isEqualTo(ErrorCode.INVALID_LOGIN_DATA);
-//        }
-//
-//        @DisplayName("아이디가 존재하지 않아 로그인할 때 예외를 던진다.")
-//        @Test
-//        void givenNotExistsLoginId_whenLogin_thenThrowsException() {
-//            // given
-//            mockingOAuthInfo();
-//            LoginRequest request = new LoginRequest("joy");
-//
-//            // when & then
-//            assertThatThrownBy(() -> authService.login(OAuthProvider.NAVER, request, "code"))
-//                    .isInstanceOf(UnAuthorizedException.class)
-//                    .extracting("errorCode").isEqualTo(ErrorCode.INVALID_LOGIN_DATA);
-//        }
-//
-//        private void mockingOAuthInfo() {
-//
-//        }
+        @DisplayName("아이디는 존재하지만 해당 아이디의 이메일과 Naver 이메일 정보가 일치하지 않는 로그인 정보가 주어지면 예외를 던진다.")
+        @Test
+        void givenInvalidLoginData_whenLogin_thenThrowsException() {
+            // given
+            mockingOAuthInfo();
+
+            LoginRequest request = new LoginRequest("joy");
+            MemberProfile profile = supportRepository.save(MemberProfile.builder()
+                    .memberEmail("gamja@naver.com")
+                    .build());
+
+            supportRepository.save(Member.builder()
+                    .loginName("gamja")
+                    .imgUrl("url")
+                    .oauthProvider("KAKAO")
+                    .memberProfile(profile)
+                    .build());
+
+            // when & then
+            Assertions.assertThatThrownBy(() -> authService.login(OAuthProvider.KAKAO, request, "code"))
+                    .isInstanceOf(UnAuthorizedException.class)
+                    .extracting("errorMessage").isEqualTo(ErrorMessage.INVALID_LOGIN_DATA);
+        }
+
+        @DisplayName("아이디가 존재하지 않아 로그인할 때 예외를 던진다.")
+        @Test
+        void givenNotExistsLoginId_whenLogin_thenThrowsException() {
+            // given
+            mockingOAuthInfo();
+            LoginRequest request = new LoginRequest("gamja");
+
+            // when & then
+            assertThatThrownBy(() -> authService.login(OAuthProvider.KAKAO, request, "code"))
+                    .isInstanceOf(UnAuthorizedException.class)
+                    .extracting("errorMessage").isEqualTo(ErrorMessage.INVALID_LOGIN_DATA);
+        }
+
+        private void mockingOAuthInfo() {
+            given(kakaoRequester.getToken(anyString()))
+                    .willReturn(new OauthTokenResponse("xxx.xxx.xxx", "scope", "bearer"));
+            given(kakaoRequester.getUserProfile(any(OauthTokenResponse.class)))
+                    .willReturn(UserProfile.builder()
+                            .email("gamja@naver.com")
+                            .profileUrl("url")
+                            .build());
+        }
     }
 }

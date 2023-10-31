@@ -55,6 +55,10 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean deleted;
 
+    @Column(nullable = false)
+    @ColumnDefault(value = "0")
+    private Integer chatCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "town_id")
     @JsonIgnore
@@ -143,4 +147,9 @@ public class Product extends BaseTimeEntity {
         }
         throw new NotUserMineProductException();
     }
+
+    public void increaseChatCount() {
+        this.chatCount++;
+    }
+
 }

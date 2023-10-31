@@ -1,36 +1,74 @@
-//package com.secondhand.presentation.controller;
+package com.secondhand.presentation.controller;
+
+import com.secondhand.presentation.support.LoginValue;
+import com.secondhand.service.ChatLogService;
+import com.secondhand.service.ChatRoomService;
+import com.secondhand.util.BasicResponse;
+import com.secondhand.web.dto.chat.ChatLogResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@RequiredArgsConstructor
+@RequestMapping("/api")
+@RestController
+public class ChatController {
+
+    private static final Long TIMEOUT_VALUE = 10000L;
+
+    private final Map<DeferredResult<BasicResponse<ChatLogResponse>>, ChatData> chatRequests = new ConcurrentHashMap<>();
+    private final ChatLogService chatLogService;
+    private final ChatRoomService chatRoomService;
+
+    @GetMapping("/chats/{chatRoomId}")
+    public DeferredResult<BasicResponse<ChatLogResponse>> readAll(
+            @PathVariable Long chatRoomId,
+            @RequestParam(required = false, defaultValue = "0") Long messageId,
+            @LoginValue Long memberId) {
+
+        DeferredResult<BasicResponse<ChatLogResponse>> deferredResult =
+                new DeferredResult<>(TIMEOUT_VALUE, BasicResponse.send(HttpStatus.OK.value(), "채팅룸 보기", List.of()));
+        chatRequests.put(deferredResult, new ChatData(chatRoomId, messageId, memberId));
+
+        deferredResult.onCompletion(() -> chatRequests.remove(deferredResult));
+
+        ChatLogResponse messages = chatLogService.getMessages(chatRoomId, messageId, memberId);
+        if (!messages.getChat().isEmpty()) {
+            deferredResult.setResult(BasicResponse.send(HttpStatus.OK.value(),"채팅방이 없습니다" ,messages));
+        }
+
+        return deferredResult;
+    }
+
+//    @GetMapping("/chats")
+//    public DeferredResult<ApiResponse<CustomSlice<ChatRoomResponse>>> readList(
+//            @PageableDefault Pageable pageable,
+//            @Auth Long memberId) {
+//        CustomSlice<ChatRoomResponse> chatRooms = chatRoomService.read(memberId, pageable, null);
 //
-//import com.secondhand.domain.chat.ChatMessage;
-//import com.secondhand.domain.chat.repository.ChatRoomRedisRepository;
-//import com.secondhand.domain.chat.topic.RedisPublisher;
-//import com.secondhand.infrastructure.jwt.JwtTokenProvider;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.messaging.handler.annotation.Header;
-//import org.springframework.messaging.handler.annotation.MessageMapping;
-//import org.springframework.stereotype.Controller;
+//        DeferredResult<ApiResponse<CustomSlice<ChatRoomResponse>>> deferredResult =
+//                new DeferredResult<>(TIMEOUT_VALUE, new ApiResponse<>(HttpStatus.OK.value(), chatRooms));
+//        chatRoomRequests.put(deferredResult, memberId);
 //
-//@Slf4j
-//@RequiredArgsConstructor
-//@Controller
-//public class ChatController {
+//        deferredResult.onCompletion(() -> chatRoomRequests.remove(deferredResult));
 //
-//    private final RedisPublisher redisPublisher;
-//    private final ChatRoomRedisRepository chatRoomRedisRepository;
-//    private final ChatRoomFacadeService chatRoomFacadeService;
-//    private final JwtTokenProvider jwtTokenProvider;
-//
-//    /**
-//     * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
-//     */
-//    @MessageMapping("/chat/message")
-//    public void message(ChatMessage message, @Header("token") String token) {
-//        String nickname = jwtTokenProvider.getUserNameFromJwt(token);
-//        // 로그인 회원 정보로 대화명 설정
-//        message.setSender(nickname);
-//        // 채팅방 인원수 세팅
-//        message.setUserCount(chatRoomRedisRepository.getUserCount(message.getRoomId()));
-//        // Websocket에 발행된 메시지를 redis로 발행(publish)
-//        chatRoomFacadeService.sendChatMessage(message);
+//        return deferredResult;
 //    }
-//}
+
+
+    @Getter
+    @AllArgsConstructor
+    private static class ChatData {
+
+        private Long chatRoomId;
+        private Long messageId;
+        private Long targetMemberId;
+    }
+}

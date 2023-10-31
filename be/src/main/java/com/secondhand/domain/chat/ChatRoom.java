@@ -2,29 +2,27 @@ package com.secondhand.domain.chat;
 
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.product.Product;
-import com.secondhand.util.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
-@Entity
+
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoom extends BaseTimeEntity {
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "chat_room")
+@Entity
+public class ChatRoom {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private UUID chatRoomId;
 
     @Column(nullable = false, length = 1000)
     private String subject;
@@ -32,55 +30,52 @@ public class ChatRoom extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime lastSendTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @Column(nullable = false, updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
 
+    @JoinColumn(nullable = false, name = "buyer_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Member customer;
+    private Member buyer;
 
-    //채팅방 하나에 판매자한명 구독하는 사고자하는 사람은 여러명
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "seller_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member seller;
 
-    @Enumerated(EnumType.STRING)
-    private ChatroomStatus chatroomStatus;
+    @JoinColumn(nullable = false, name = "product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
 
     @Builder
-    public ChatRoom(Long id, UUID chatroomId, String subject, Product product, Member customer, Member seller, ChatroomStatus chatroomStatus) {
+    private ChatRoom(Long id, String subject, Member buyer, Member seller, Product product) {
         this.id = id;
-        this.chatRoomId = chatroomId;
         this.subject = subject;
-        this.product = product;
-        this.customer = customer;
+        this.lastSendTime = LocalDateTime.now();
+        this.buyer = buyer;
         this.seller = seller;
-        this.chatroomStatus = chatroomStatus;
+        this.product = product;
     }
 
-    public static ChatRoom create(Product product, Member buyer) {
+    public static ChatRoom of(Long creatorId, Long itemId, Long sellerId) {
         return ChatRoom.builder()
-                .chatroomId(UUID.randomUUID())
                 .subject("")
-                .product(product)
-                .customer(buyer)
-                .seller(product.getMember())
-                .chatroomStatus(ChatroomStatus.FULL)
+                .product(Product.builder()
+                        .id(itemId)
+                        .build())
+                .buyer(Member.builder()
+                        .id(creatorId)
+                        .build())
+                .seller(Member.builder()
+                        .id(sellerId)
+                        .build())
                 .build();
     }
 
-    public void setUserCount(long userCount) {
+    public void setLastSendMessage(String message) {
+        this.subject = message;
     }
 
-    public List<String> getChatroomMemberIds() {
-        Map<Long, Member> chatroomMembers = getChatroomMembers();
-        return chatroomMembers.values().stream()
-                .map(Member::getLoginName)
-                .collect(Collectors.toList());
-    }
-
-    private Map<Long, Member> getChatroomMembers() {
-        return Map.of(customer.getId(), customer, this.seller.getId(), this.product.getMember());
+    public void changeLastSendTime() {
+        this.lastSendTime = LocalDateTime.now();
     }
 }

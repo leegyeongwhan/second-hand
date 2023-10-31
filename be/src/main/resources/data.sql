@@ -131,6 +131,32 @@ create table chat_log
         foreign key (chat_room_id) references chat_room (chat_room_id)
 );
 
+
+CREATE TABLE IF NOT EXISTS chat_room
+(
+    id             BIGINT        NOT NULL AUTO_INCREMENT,
+    created_at     TIMESTAMP     NOT NULL,
+    buyer_id       BIGINT        NOT NULL,
+    seller_id      BIGINT        NOT NULL,
+    item_id        BIGINT        NOT NULL,
+    subject        VARCHAR(1000) NOT NULL COMMENT '마지막으로 보낸 메시지',
+    last_send_time TIMESTAMP     NULL COMMENT '마지막 메시지 전송 시간',
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS chat_log
+(
+    id           BIGINT        NOT NULL AUTO_INCREMENT,
+    message      VARCHAR(1000) NOT NULL,
+    read_count   INT           NOT NULL COMMENT '메시지를 읽지 않은 사람의 수',
+    sender_id    BIGINT        NOT NULL COMMENT '메시지를 전송한 사람의 PK',
+    created_at   TIMESTAMP     NOT NULL COMMENT '메시지 전송 시간',
+    chat_room_id BIGINT        NOT NULL,
+    PRIMARY KEY (id)
+);
+
+
+
 CREATE TABLE  member_token
 (
     member_id BIGINT       NOT NULL,

@@ -45,6 +45,7 @@ create table product
     created_at    datetime     NULL     DEFAULT CURRENT_TIMESTAMP,
     count_view    smallint              default 0,
     count_like    smallint              default 0,
+    chat_count    INT          NOT NULL DEFAULT 0 COMMENT '채팅수',
     thumbnail_url varchar(200) not null,
     town_id       bigint       not null,
     category_id   bigint       not null,
@@ -126,7 +127,7 @@ create table chat_log
     read_count   bigint        not null,
     sender_id    bigint        not null,
     createdAt    datetime      not null,
-    chat_room_id bigint not null,
+    chat_room_id bigint        not null,
     constraint fk_chat_room_id
         foreign key (chat_room_id) references chat_room (chat_room_id)
 );
@@ -157,10 +158,10 @@ CREATE TABLE IF NOT EXISTS chat_log
 
 
 
-CREATE TABLE  member_token
+CREATE TABLE member_token
 (
-    member_id BIGINT       NOT NULL,
-    member_token     VARCHAR(256) NOT NULL,
+    member_id    BIGINT       NOT NULL,
+    member_token VARCHAR(256) NOT NULL,
     PRIMARY KEY (member_id)
 )
 

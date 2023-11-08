@@ -1,13 +1,10 @@
 package com.secondhand.presentation.support;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.RequestScope;
-
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
-@RequestScope
 public class AuthenticationContext {
 
     private Long memberId;

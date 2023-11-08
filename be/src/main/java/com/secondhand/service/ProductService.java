@@ -17,6 +17,7 @@ import com.secondhand.web.dto.requset.ProductSaveRequest;
 import com.secondhand.web.dto.requset.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,12 +43,14 @@ public class ProductService {
     private final ImageService imageService;
 
     @Transactional
-    public Long save(long userId, ProductSaveRequest requestInfo, MultipartFile thumbnailImage, List<MultipartFile> images) {
+    public void save(long userId, ProductSaveRequest requestInfo, MultipartFile thumbnailImage,
+            List<MultipartFile> images) {
         if (!isValidThumbnail(thumbnailImage)) {
             throw new BadRequestException(ErrorMessage.INVALID_REQUEST, "썸네일 이미지는 반드시 들어와야 합니다.");
         }
         if (images != null && images.size() > IMAGE_LIST_MAX_SIZE) {
-            throw new BadRequestException(ErrorMessage.INVALID_REQUEST, "썸네일 이미지 외의 이미지는 최대 9개까지 들어올 수 있습니다.");
+            throw new BadRequestException(ErrorMessage.INVALID_REQUEST,
+                    "썸네일 이미지 외의 이미지는 최대 9개까지 들어올 수 있습니다.");
         }
 
         String thumbnailUrl = imageService.upload(thumbnailImage);
@@ -55,17 +58,11 @@ public class ProductService {
 
         itemImageUrls = new ArrayList<>(itemImageUrls);
         itemImageUrls.add(thumbnailUrl);
-        log.debug("requestInfo = {}", requestInfo);
         Category category = categoryService.findById(requestInfo.getCategoryId());
-        log.debug("category = {}", category);
         Town town = townService.findById(requestInfo.getTownId());
-        log.debug("town = {}", town);
         Member member = memberService.findMemberById(userId);
-        log.debug("member = {}", member);
-        Product product = Product.create(requestInfo, member, category, town, thumbnailUrl);
-        log.debug("product = {}", product);
-        Product saveProduct = productRepository.save(product);
-        log.debug("saveProduct = {}", saveProduct);
+        Product saveProduct = productRepository.save(
+                requestInfo.toEntity(member, category, town, thumbnailUrl));
 
         List<Image> itemImages = itemImageUrls.stream()
                 .map(url -> Image.of(url, saveProduct))
@@ -73,7 +70,6 @@ public class ProductService {
         imageRepository.saveAllImages(itemImages);
 
         log.debug("itemImages = {}", itemImages);
-        return saveProduct.getId();
     }
 
     private boolean isValidThumbnail(MultipartFile image) {
@@ -103,7 +99,8 @@ public class ProductService {
     public void changeLike(long productId, long userId) {
         Member member = memberService.findMemberById(userId);
         Product product = findById(productId);
-        Optional<Interested> interested = interestedRepository.findByMemberAndProduct(member, product);
+        Optional<Interested> interested = interestedRepository.findByMemberAndProduct(member,
+                product);
         if (interested.isPresent()) {
             log.debug("이미 좋아요 누른경우 ======================");
             Interested existInterested = interested.get();

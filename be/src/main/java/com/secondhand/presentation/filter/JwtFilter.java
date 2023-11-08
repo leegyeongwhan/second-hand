@@ -5,22 +5,19 @@ import com.secondhand.exception.v2.UnAuthorizedException;
 import com.secondhand.infrastructure.jwt.AuthorizationExtractor;
 import com.secondhand.infrastructure.jwt.JwtTokenProvider;
 import com.secondhand.presentation.support.AuthenticationContext;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 
 @Slf4j

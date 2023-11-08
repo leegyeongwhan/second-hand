@@ -35,29 +35,36 @@ public class ProductController {
     private final ProductQueryService productQueryService;
 
     @GetMapping
-    public BasicResponse<MainPageResponse> viewPage(ProductSearchCondition productSearchCondition, @LoginValue Long userId) {
+    public BasicResponse<MainPageResponse> viewPage(ProductSearchCondition productSearchCondition,
+            @LoginValue Long userId) {
         log.debug("userId = {}", userId);
-        MainPageResponse mainPageResponse = productQueryService.getProductList(productSearchCondition, userId);
-        return BasicResponse.send(HttpStatus.OK.value(), "사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)", mainPageResponse);
+        MainPageResponse mainPageResponse = productQueryService.getProductList(
+                productSearchCondition, userId);
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자는 상품을 10개씩 상품 리스프로 볼 수 있다(지역 과 카테고리)",
+                mainPageResponse);
 
     }
 
     @LoginCheck
     @GetMapping("/like")
-    public BasicResponse<MainPageCategoryResponse> productLikeCategoryView(ProductCategorySearchCondition condition,
-                                                                           Pageable pageable,
-                                                                           @LoginValue long userId) {
+    public BasicResponse<MainPageCategoryResponse> productLikeCategoryView(
+            ProductCategorySearchCondition condition,
+            Pageable pageable,
+            @LoginValue long userId) {
 
-        MainPageCategoryResponse likeProductList = productQueryService.getLikeProductList(condition, pageable, userId);
+        MainPageCategoryResponse likeProductList = productQueryService.getLikeProductList(condition,
+                pageable, userId);
 
-        return BasicResponse.send(HttpStatus.OK.value(), "사용자는 자시의 관심 목록을 카테고리 뱔로 확인 가능", likeProductList);
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자는 자시의 관심 목록을 카테고리 뱔로 확인 가능",
+                likeProductList);
 
     }
 
     @PatchMapping("/{productId}")
-    public BasicResponse<ProductResponse> changeLike(final @Valid @RequestBody StatusOrLikeRequest request,
-                                                     @PathVariable long productId,
-                                                     @LoginValue long userId) {
+    public BasicResponse<ProductResponse> changeLike(
+            final @Valid @RequestBody StatusOrLikeRequest request,
+            @PathVariable long productId,
+            @LoginValue long userId) {
 
         if (request.getStatus() == null) {  //like
             productService.changeLike(productId, userId);
@@ -75,22 +82,23 @@ public class ProductController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public BasicResponse<Long> save(@RequestPart(required = false) MultipartFile thumbnailImage,
-                                    @RequestPart(required = false) List<MultipartFile> images,
-                                    @LoginValue Long userId,
-                                    @Valid ProductSaveRequest productSaveRequest) {
-        Long save = productService.save(userId, productSaveRequest, thumbnailImage, images);
-        return BasicResponse.send(HttpStatus.CREATED.value(), "상품 등록.", save);
+    public BasicResponse<Void> save(@RequestPart(required = false) MultipartFile thumbnailImage,
+            @RequestPart(required = false) List<MultipartFile> images,
+            @LoginValue Long userId,
+            @Valid @RequestPart ProductSaveRequest productSaveRequest) {
+        productService.save(userId, productSaveRequest, thumbnailImage, images);
+        return BasicResponse.send(HttpStatus.CREATED.value(), "상품 등록.");
     }
 
 
     @LoginCheck
     @PutMapping("/{productId}")
     public BasicResponse<ProductResponse> update(@LoginValue long userId,
-                                                 @PathVariable Long productId,
-                                                 @Valid @RequestBody ProductUpdateRequest updateRequest) {
+            @PathVariable Long productId,
+            @Valid @RequestBody ProductUpdateRequest updateRequest) {
         productService.update(productId, updateRequest, userId);
-        ProductResponse productUpdateResponse = productQueryService.isValidMinePage(productId, userId);
+        ProductResponse productUpdateResponse = productQueryService.isValidMinePage(productId,
+                userId);
 
         return BasicResponse.send(HttpStatus.OK.value(), "상품 수정.", productUpdateResponse);
     }
@@ -98,7 +106,8 @@ public class ProductController {
 
     @LoginCheck
     @GetMapping("/{productId}")
-    public BasicResponse<ProductResponse> readDetail(@LoginValue long userId, @PathVariable long productId) {
+    public BasicResponse<ProductResponse> readDetail(@LoginValue long userId,
+            @PathVariable long productId) {
 
         ProductResponse detailPage = productQueryService.getDetailPage(productId, userId);
 
@@ -107,7 +116,8 @@ public class ProductController {
 
     @LoginCheck
     @DeleteMapping("/{productId}")
-    public BasicResponse<String> deleteProduct(@LoginValue long userId, @PathVariable long productId) {
+    public BasicResponse<String> deleteProduct(@LoginValue long userId,
+            @PathVariable long productId) {
         productService.delete(userId, productId);
 
         return BasicResponse.send(HttpStatus.OK.value(), " 상품 삭제");

@@ -72,7 +72,8 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
      * @return
      */
     @Override
-    public Slice<Product> findAllByTowns(ProductSearchCondition condition, Pageable pageable, long userId) {
+    public Slice<Product> findAllByTowns(ProductSearchCondition condition, Pageable pageable,
+            long userId) {
         int pageSize = pageable.getPageSize() + 1;
         log.debug("querydsl 실행 ========================");
 
@@ -81,15 +82,15 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
                         ltProductId(condition.getLastNum()),
                         categoryEq(condition.getCategoryId()),
                         isLikedEq(condition.getIsLiked(), userId),
-                        isOnSales(condition),
-                        product.deleted.eq(false))
+                        isOnSales(condition))
                 .limit(pageSize)
                 .orderBy(product.id.desc())
                 .fetch();
 
         System.out.println("pageSize = " + pageSize);
         log.debug("qurelydsl 종료 =================");
-        return new SliceImpl<>(getContents(products, pageSize - 1), pageable, hasNext(products, pageSize - 1));
+        return new SliceImpl<>(getContents(products, pageSize - 1), pageable,
+                hasNext(products, pageSize - 1));
     }
 
     private Predicate ltProductId(Long productId) {
@@ -105,7 +106,8 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
 
 
     @Override
-    public Slice<Product> findAllByCategory(ProductCategorySearchCondition condition, Pageable pageable, long userId) {
+    public Slice<Product> findAllByCategory(ProductCategorySearchCondition condition,
+            Pageable pageable, long userId) {
         int pageSize = pageable.getPageSize() + 1;
 
         log.debug("querydsl 실행 ========================");

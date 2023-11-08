@@ -19,6 +19,7 @@ import static com.secondhand.documentation.ConstraintsHelper.withPath;
 import static javax.management.openmbean.SimpleType.BOOLEAN;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -47,14 +48,17 @@ class ProductDocumentationTest extends DocumentationTestSupport {
 
         ProductSaveRequest request = FixtureFactory.createProductSaveRequest();
 
-        given(productService.save(anyLong(), any(ProductSaveRequest.class), any(MultipartFile.class), anyList()))
-                .willReturn(anyLong());
+        willDoNothing()
+                .given(productService)
+                .save(anyLong(), any(ProductSaveRequest.class), any(MultipartFile.class),
+                        anyList());
 
-        MockMultipartFile thumbnail = new MockMultipartFile("thumbnailImage", "image.png", "image/png",
+        MockMultipartFile thumbnail = new MockMultipartFile("thumbnailImage", "image.png",
+                "image/png",
                 "<<png data>>".getBytes());
         MockMultipartFile itemImage = new MockMultipartFile("images", "image.png", "image/png",
                 "<<png data>>".getBytes());
-        MockMultipartFile itemRegisterData = new MockMultipartFile("item", "",
+        MockMultipartFile itemRegisterData = new MockMultipartFile("productSaveRequest", "",
                 MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsBytes(request));
 
         // when
@@ -71,9 +75,7 @@ class ProductDocumentationTest extends DocumentationTestSupport {
                 .andExpect(jsonPath("httpStatus").value(201))
                 .andExpect(jsonPath("message").value("상품 등록."))
                 .andExpect(jsonPath("apiStatus").value("20000"))
-                .andExpect(jsonPath("success").value("true"))
-                .andExpect(jsonPath("data").value(1L)); // 상품 ID를 반환하므로 data 필드에 1L이 와야 합니다.
-
+                .andExpect(jsonPath("success").value("true"));
 
         // docs
         resultActions.andDo(document("product/save",
@@ -86,22 +88,21 @@ class ProductDocumentationTest extends DocumentationTestSupport {
                         partWithName("thumbnailImage").description("썸네일 이미지"),
                         partWithName("images").optional().description("상품 이미지")
                                 .attributes(key("nullable").value(true)),
-                        partWithName("product").description("상품 데이터")
+                        partWithName("productSaveRequest").description("상품 데이터")
                 ),
-                requestPartFields("product",
+                requestPartFields("productSaveRequest",
                         withPath("title", ProductSaveRequest.class).description("상품 제목"),
                         withPath("price", ProductSaveRequest.class).description("상품 가격"),
                         withPath("content", ProductSaveRequest.class).description("상품 설명"),
-                        withPath("region", ProductSaveRequest.class).description("상품 판매 지역"),
-                        withPath("categoryId", ProductSaveRequest.class).description("상품 카테고리 아이디"),
-                        withPath("productImages", ProductSaveRequest.class).description("상품 사진들")
+                        withPath("townId", ProductSaveRequest.class).description("상품 판매 지역"),
+                        withPath("categoryId", ProductSaveRequest.class).description("상품 카테고리 아이디")
                 ),
                 responseFields(
                         fieldWithPath("httpStatus").type(NUMBER).description("응답코드"),
                         fieldWithPath("message").type(STRING).description("응답 메시지"),
                         fieldWithPath("apiStatus").type(NUMBER).description("메서드 상태 코드"),
                         fieldWithPath("success").type(BOOLEAN).description("성공 여부"),
-                        fieldWithPath("data.product/save[*].id").type(NUMBER).description("상품 아이디")
+                        fieldWithPath("data").ignored()
                 )
         ));
     }

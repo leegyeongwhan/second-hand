@@ -29,10 +29,4 @@ public class ProductTest {
                 .set("detailInterested", fixtureMonkey().giveMe(Interested.class, 5))
                 .sample();
     }
-
-    @Test
-    @DisplayName("")
-    void update() {
-    }
-
 }

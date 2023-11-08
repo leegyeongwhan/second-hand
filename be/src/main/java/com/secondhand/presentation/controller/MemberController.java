@@ -30,15 +30,16 @@ public class MemberController {
     private final LoginService loginService;
 
     @PostMapping("/auth/github/login")
-    public BasicResponse<MemberLoginResponse> login(@RequestHeader(name = "User-Agent") String userAgent,
-                                                    @RequestBody GithubRequestCode code,
-                                                    HttpServletResponse response) throws IOException, InterruptedException {
+    public BasicResponse<MemberLoginResponse> login(
+            @RequestHeader(name = "User-Agent") String userAgent,
+            @RequestBody GithubRequestCode code,
+            HttpServletResponse response) throws IOException, InterruptedException {
         log.debug("프론트로 부터받은  코드= {}", code.getAuthorizationCode());
         MemberLoginResponse memberResponseDTO = loginService.login(code, userAgent);
         memberService.setMemberProfileByOauthLogin(memberResponseDTO);
         // jwtService.setTokenHeader(memberProfileResponse, response);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"깃허브 로그인", memberResponseDTO);
+        return BasicResponse.send(HttpStatus.OK.value(), "깃허브 로그인", memberResponseDTO);
     }
 
 //    @Operation(
@@ -59,27 +60,35 @@ public class MemberController {
 
 
     @PostMapping("/join")
-    public BasicResponse<MemberLoginResponse> join(final @Valid @RequestBody JoinRequest joinRequest) {
+    public BasicResponse<MemberLoginResponse> join(
+            final @Valid @RequestBody JoinRequest joinRequest) {
+        
         MemberLoginResponse memberResponseDTO = loginService.join(joinRequest);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"일반 회원가입 로그인", memberResponseDTO);
+        return BasicResponse.send(HttpStatus.OK.value(), "일반 회원가입 로그인", memberResponseDTO);
     }
 
     @LoginCheck
     @PostMapping("/members/signup")
-    public BasicResponse<MemberLoginResponse> signupEmail(@LoginValue long userId, final @Valid @RequestBody SignupSocialRequest signupSocialRequest) {
-        MemberLoginResponse memberLoginResponse = loginService.signupEmail(userId, signupSocialRequest);
+    public BasicResponse<MemberLoginResponse> signupEmail(
+            @LoginValue long userId,
+            final @Valid @RequestBody SignupSocialRequest signupSocialRequest) {
 
-        return BasicResponse.send(HttpStatus.OK.value(),"사용자 이메일 추가", memberLoginResponse);
+        MemberLoginResponse memberLoginResponse = loginService.signupEmail(userId,
+                signupSocialRequest);
+
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자 이메일 추가", memberLoginResponse);
     }
 
 
     @LoginCheck
     @PatchMapping("/members")
-    public BasicResponse<String> updateNickName(@LoginValue long userId, @RequestBody UpdateNickNameRequest nickNameRequest) {
+    public BasicResponse<String> updateNickName(
+            @LoginValue long userId,
+            @RequestBody UpdateNickNameRequest nickNameRequest) {
         memberService.updateNickName(userId, nickNameRequest);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"유저닉네임수정");
+        return BasicResponse.send(HttpStatus.OK.value(), "유저닉네임수정");
     }
 
     @LoginCheck
@@ -88,7 +97,7 @@ public class MemberController {
         log.debug("로그아웃 요청");
         loginService.logout(userId);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"로그아웃 요청");
+        return BasicResponse.send(HttpStatus.OK.value(), "로그아웃 요청");
     }
 
     @LoginCheck
@@ -97,6 +106,6 @@ public class MemberController {
         log.debug("사용자 id = {} ", userId);
         MemberResponse userInfo = memberService.getUserInfo(userId);
 
-        return BasicResponse.send(HttpStatus.OK.value(),"사용자 정보를 가져온다", userInfo);
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자 정보를 가져온다", userInfo);
     }
 }

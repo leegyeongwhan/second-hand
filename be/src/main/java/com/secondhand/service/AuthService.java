@@ -76,7 +76,8 @@ public class AuthService {
     }
 
     @Transactional
-    public void signUp(OAuthProvider oAuthProvider, SignUpRequest request, String code, String userAgent) {
+    public void signUp(OAuthProvider oAuthProvider, SignUpRequest request, String code,
+            String userAgent) {
         verifyDuplicated(request);
 
         //github naver
@@ -89,7 +90,8 @@ public class AuthService {
 //            userProfile.changeProfileUrl(profileUrl);
 //        }
 
-        MemberProfile memberProfile = memberProfileRepository.save(new MemberProfile(userProfile.getEmail()));
+        MemberProfile memberProfile = memberProfileRepository.save(
+                new MemberProfile(userProfile.getEmail()));
         saveMember(request, userProfile, oAuthProvider.getName(), memberProfile);
         //  residenceService.saveResidence(request.getAddressIds(), savedMember);
     }
@@ -109,8 +111,10 @@ public class AuthService {
         tokenRepository.deleteByMemberToken(refreshToken);
     }
 
-    private Member saveMember(SignUpRequest request, UserProfile userProfile, String oAuthProvider, MemberProfile memberProfile) {
+    private Member saveMember(SignUpRequest request, UserProfile userProfile, String oAuthProvider,
+            MemberProfile memberProfile) {
         Town town = townService.findById(1L);
-        return memberRepository.save(request.toMemberEntity(userProfile, oAuthProvider, memberProfile, town));
-}
+        return memberRepository.save(
+                request.toMemberEntity(userProfile, oAuthProvider, memberProfile, town));
+    }
 }

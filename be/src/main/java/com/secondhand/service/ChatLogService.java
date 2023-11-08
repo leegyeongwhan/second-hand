@@ -35,19 +35,23 @@ public class ChatLogService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_FOUND));
         Product product = productRepository.findById(chatRoom.getProduct().getId())
-                .orElseThrow(() -> NotFoundException.productNotFound(ErrorMessage.NOT_FOUND, chatRoom.getProduct().getId()));
+                .orElseThrow(() -> NotFoundException.productNotFound(ErrorMessage.NOT_FOUND,
+                        chatRoom.getProduct().getId()));
 
         Member receiver = chatRoom.getSeller();
 
-        List<ChatLog> chatLogs = chatLogRepository.findAllByChatRoom_IdAndIdIsGreaterThan(chatRoomId, messageId);
+        List<ChatLog> chatLogs = chatLogRepository.findAllByChatRoom_IdAndIdIsGreaterThan(
+                chatRoomId, messageId);
         List<SimpleChatLog> chatLogsResponse = chatLogs.stream()
                 .map(chatLog -> SimpleChatLog.of(chatLog, chatLog.getSenderId().equals(memberId)))
                 .collect(Collectors.toList());
 
         eventPublisher.publishEvent(new ChatReadEvent(chatRoomId, memberId));
 
-        Long lastMessageId = chatLogs.isEmpty() ? messageId : chatLogs.get(chatLogs.size() - 1).getId();
-        return new ChatLogResponse(receiver.getLoginName(), ProductSimpleResponse.from(product), chatLogsResponse, lastMessageId);
+        Long lastMessageId =
+                chatLogs.isEmpty() ? messageId : chatLogs.get(chatLogs.size() - 1).getId();
+        return new ChatLogResponse(receiver.getLoginName(), ProductSimpleResponse.from(product),
+                chatLogsResponse, lastMessageId);
     }
 
     @Transactional

@@ -41,21 +41,25 @@ public class ProductQueryService {
         return ProductResponse.of(product.checkIsMine(userId), product);
     }
 
-    public ProductResponse isValidMinePage(long productId, long userId) {
+    public ProductResponse isValidMinePage(
+            long productId, long userId) {
         Product product = findById(productId);
         return ProductResponse.of(product.checkIsDetailPageMine(userId), product);
     }
 
-    public MainPageResponse getProductList(ProductSearchCondition productSearchCondition, long userId) {
+    public MainPageResponse getProductList(ProductSearchCondition productSearchCondition,
+            long userId) {
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE);
-        Slice<Product> page = productRepository.findAllByTowns(productSearchCondition, pageable, userId);
+        Slice<Product> page = productRepository.findAllByTowns(productSearchCondition, pageable,
+                userId);
         List<Product> products = page.getContent();
         log.debug("products = {}", products.size());
         return MainPageResponse.of(products, userId);
     }
 
 
-    public MainPageCategoryResponse getLikeProductList(ProductCategorySearchCondition productSearchCondition, Pageable pageable, long userId) {
+    public MainPageCategoryResponse getLikeProductList(
+            ProductCategorySearchCondition productSearchCondition, Pageable pageable, long userId) {
         //로그인한 유저가 좋아요 누른목록
         Member member = memberService.findMemberById(userId);
         Set<Interested> interesteds = member.getInteresteds();
@@ -65,7 +69,8 @@ public class ProductQueryService {
                 .collect(Collectors.toList());
         log.debug("likedCategoryIds ={}", likedCategoryIds);
 
-        Slice<Product> page = productRepository.findAllByCategory(productSearchCondition, pageable, userId);
+        Slice<Product> page = productRepository.findAllByCategory(productSearchCondition, pageable,
+                userId);
         List<Product> products = page.getContent();
 
         List<Long> categoryIds = products.stream()

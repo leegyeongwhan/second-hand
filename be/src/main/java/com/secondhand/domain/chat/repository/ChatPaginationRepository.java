@@ -45,22 +45,22 @@ public class ChatPaginationRepository implements PaginationRepository {
 
     private Expression<String> createPartnerNameExpression(Long memberId) {
         return new CaseBuilder()
-                .when(chatRoom.customer.id.eq(memberId))
+                .when(chatRoom.buyer.id.eq(memberId))
                 .then(chatRoom.seller.loginName)
-                .otherwise(chatRoom.customer.loginName)
+                .otherwise(chatRoom.buyer.loginName)
                 .as("chatPartnerName");
     }
 
     private Expression<String> createPartnerProfileExpression(Long memberId) {
         return new CaseBuilder()
-                .when(chatRoom.customer.id.eq(memberId))
+                .when(chatRoom.buyer.id.eq(memberId))
                 .then(chatRoom.seller.imgUrl)
-                .otherwise(chatRoom.customer.imgUrl)
+                .otherwise(chatRoom.buyer.imgUrl)
                 .as("chatPartnerProfile");
     }
 
     private BooleanExpression equalsMemberId(Long memberId) {
-        return chatRoom.customer.id.eq(memberId)
+        return chatRoom.buyer.id.eq(memberId)
                 .or(chatRoom.seller.id.eq(memberId));
     }
 

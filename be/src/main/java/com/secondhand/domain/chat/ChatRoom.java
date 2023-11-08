@@ -56,11 +56,11 @@ public class ChatRoom {
         this.product = product;
     }
 
-    public static ChatRoom of(Long creatorId, Long itemId, Long sellerId) {
+    public static ChatRoom of(Long creatorId, Long productId, Long sellerId) {
         return ChatRoom.builder()
                 .subject("")
                 .product(Product.builder()
-                        .id(itemId)
+                        .id(productId)
                         .build())
                 .buyer(Member.builder()
                         .id(creatorId)

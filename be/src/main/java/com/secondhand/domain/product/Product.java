@@ -71,10 +71,8 @@ public class Product extends BaseTimeEntity {
     @JsonIgnore
     private Town towns;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    @JsonIgnore
-    private Category category;
+    @Column(length = 45, nullable = false)
+    private String category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -106,7 +104,7 @@ public class Product extends BaseTimeEntity {
 
     @Builder
     private Product(Long id, String title, String content, Integer price, String thumbnailUrl,
-            Status status, Category category, Town towns, Member member) {
+            Status status, String category, Town towns, Member member) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -119,7 +117,7 @@ public class Product extends BaseTimeEntity {
     }
 
 
-    public void update(ProductUpdateRequest updateRequest, Category category, Town town) {
+    public void update(ProductUpdateRequest updateRequest, String category, Town town) {
         this.title = updateRequest.getTitle();
         this.content = updateRequest.getContent();
         this.price = updateRequest.getPrice();

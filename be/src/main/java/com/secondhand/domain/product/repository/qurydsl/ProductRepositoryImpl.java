@@ -114,7 +114,6 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
 
         JPAQuery<Product> query = jpaQueryFactory.selectFrom(product)
                 .leftJoin(product.towns, town).fetchJoin()
-                .leftJoin(product.category, category).fetchJoin()
                 .leftJoin(product.member).fetchJoin()
                 .leftJoin(product.interesteds, interested).fetchJoin()
 
@@ -160,11 +159,11 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
         return product.towns.townId.eq(locationId);
     }
 
-    private BooleanExpression categoryEq(Long categoryId) {
+    private BooleanExpression categoryEq(String categoryId) {
         if (categoryId == null) {
             return null;
         }
-        return product.category.categoryId.eq(categoryId);
+        return product.category.eq(categoryId);
     }
 
     private BooleanExpression isLikedEq(Boolean isLiked, long userId) {

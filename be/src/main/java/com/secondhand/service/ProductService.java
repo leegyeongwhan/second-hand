@@ -62,7 +62,7 @@ public class ProductService {
         Town town = townService.findById(requestInfo.getTownId());
         Member member = memberService.findMemberById(userId);
         Product saveProduct = productRepository.save(
-                requestInfo.toEntity(member, category, town, thumbnailUrl));
+                requestInfo.toEntity(member, category.getName(), town, thumbnailUrl));
 
         List<Image> itemImages = itemImageUrls.stream()
                 .map(url -> Image.of(url, saveProduct))
@@ -82,7 +82,7 @@ public class ProductService {
         Town town = townService.findById(updateRequest.getTownId());
         Product product = findById(productId);
         checkIsMine(userId, product.getMember().getId());
-        product.update(updateRequest, category, town);
+        product.update(updateRequest, category.getName(), town);
         log.debug("product = {}", product);
     }
 

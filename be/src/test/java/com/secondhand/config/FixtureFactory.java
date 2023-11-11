@@ -9,9 +9,11 @@ import com.secondhand.domain.member.MemberPassword;
 import com.secondhand.domain.member.MemberProfile;
 import com.secondhand.domain.oauth.dto.OAuthInfoResponse;
 import com.secondhand.domain.product.Product;
+import com.secondhand.domain.product.Status;
 import com.secondhand.domain.town.Town;
 import com.secondhand.web.dto.login.UserProfile;
 import com.secondhand.web.dto.requset.ProductSaveRequest;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,7 +34,8 @@ public class FixtureFactory {
                 .sample();
     }
 
-    public static Product buildProductWithProductSaveRequestAndTownAndCategory(ProductSaveRequest productSaveRequest, Member member, Category category, Town town) {
+    public static Product buildProductWithProductSaveRequestAndTownAndCategory(
+            ProductSaveRequest productSaveRequest, Member member, Category category, Town town) {
         return builderProduct()
                 .set("title", productSaveRequest.getTitle())
                 .set("content", productSaveRequest.getContent())
@@ -72,5 +75,17 @@ public class FixtureFactory {
     public static Town createMemberTown() {
         return Town.builder().city("서울")
                 .county("강남구").district("역삼1동").build();
+    }
+
+    public static Product createProduct(String title, String categoryName, Member member) {
+        return Product.builder()
+                .title(title)
+                .status(Status.SELLING)
+                .price(10000)
+                .thumbnailUrl("url")
+                .category(categoryName)
+                .towns(null)
+                .member(member)
+                .build();
     }
 }

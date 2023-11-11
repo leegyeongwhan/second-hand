@@ -11,9 +11,9 @@ import java.util.List;
 public class MainPageCategoryResponse {
 
     private List<ProductListResponse> products;
-    private List<Long> categoryIds;
+    private List<String> categoryIds;
 
-    public static MainPageCategoryResponse of(List<Product> page, List<Long> categoryIds, long userId) {
+    public static MainPageCategoryResponse of(List<Product> page, List<String> categoryIds, long userId) {
         return MainPageCategoryResponse.builder()
                 .categoryIds(categoryIds)
                 .products(ProductListResponse.fromList(page, userId))

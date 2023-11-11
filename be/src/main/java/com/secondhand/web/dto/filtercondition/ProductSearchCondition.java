@@ -13,7 +13,7 @@ import javax.validation.constraints.Min;
 public class ProductSearchCondition {
     private Long lastNum;
     private Long townId;
-    private Long categoryId;
+    private String categoryId;
 
     @Nullable
     private Boolean isLiked;

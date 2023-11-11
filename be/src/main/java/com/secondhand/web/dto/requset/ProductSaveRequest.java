@@ -32,7 +32,7 @@ public class ProductSaveRequest {
     private Long categoryId;
 
 
-    public Product toEntity(Member member, Category category, Town town, String thumbnailUrl) {
+    public Product toEntity(Member member, String category, Town town, String thumbnailUrl) {
         return Product.builder()
                 .title(this.title)
                 .content(this.content)

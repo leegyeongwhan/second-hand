@@ -64,8 +64,8 @@ public class ProductQueryService {
         Member member = memberService.findMemberById(userId);
         Set<Interested> interesteds = member.getInteresteds();
 
-        List<Long> likedCategoryIds = interesteds.stream()
-                .map(interested -> interested.getProduct().getCategory().getCategoryId())
+        List<String> likedCategoryIds = interesteds.stream()
+                .map(interested -> interested.getProduct().getCategory())
                 .collect(Collectors.toList());
         log.debug("likedCategoryIds ={}", likedCategoryIds);
 
@@ -73,8 +73,8 @@ public class ProductQueryService {
                 userId);
         List<Product> products = page.getContent();
 
-        List<Long> categoryIds = products.stream()
-                .map(product -> product.getCategory().getCategoryId())
+        List<String> categoryIds = products.stream()
+                .map(product -> product.getCategory())
                 .collect(Collectors.toList());
 
         log.debug("categoryIds = {}", categoryIds);

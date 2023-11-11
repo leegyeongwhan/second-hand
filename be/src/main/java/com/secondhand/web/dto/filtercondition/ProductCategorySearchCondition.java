@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ProductCategorySearchCondition {
-    private Long categoryId;
+    private String categoryId;
 }

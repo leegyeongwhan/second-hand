@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ProductCategoryResponse {
-    private Long categoryId;
+    private String categoryId;
     private String name;
 
-    public ProductCategoryResponse(Long categoryId, String name) {
+    public ProductCategoryResponse(String categoryId, String name) {
         this.categoryId = categoryId;
         this.name = name;
     }

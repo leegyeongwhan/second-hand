@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductResponse {
+
     private Boolean isMine;
     private Seller seller;
     private Integer status;
@@ -36,7 +37,7 @@ public class ProductResponse {
                 .title(product.getTitle())
                 .content(product.getContent())
                 .createdAt(LocalDateTime.now())
-                .category(new ProductCategoryResponse(product.getCategory().getCategoryId(), product.getCategory().getName()))
+                .category(new ProductCategoryResponse(product.getCategory(), product.getCategory()))
                 .price(product.getPrice())
                 .countInfo(
                         CountInfo.builder()
@@ -57,7 +58,8 @@ public class ProductResponse {
                 .title(product.getTitle())
                 .content(product.getContent())
                 .createdAt(LocalDateTime.now())
-                .category(new ProductCategoryResponse(product.getCategory().getCategoryId(), product.getCategory().getName()))
+                .category(new ProductCategoryResponse(product.getCategory(),
+                        product.getCategory()))
                 .price(product.getPrice())
                 .countInfo(
                         CountInfo.builder()

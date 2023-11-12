@@ -2,18 +2,28 @@ package com.secondhand.domain.interested;
 
 import com.secondhand.domain.member.Member;
 import com.secondhand.domain.product.Product;
-import lombok.*;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "INTERESTED")
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Interested {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "interested_id")
@@ -30,11 +40,21 @@ public class Interested {
     private boolean isLiked;
 
 
-    public static Interested create(Member member, Product product, boolean liked) {
+    @Builder
+    private Interested(Long id, Member member, Product product) {
+        this.id = id;
+        this.member = member;
+        this.product = product;
+    }
+
+    public static Interested of(Long productId, Long memberId) {
         return Interested.builder()
-                .product(product)
-                .member(member)
-                .isLiked(liked)
+                .product(Product.builder()
+                        .id(productId)
+                        .build())
+                .member(Member.builder()
+                        .id(memberId)
+                        .build())
                 .build();
     }
 

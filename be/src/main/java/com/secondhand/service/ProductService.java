@@ -93,29 +93,38 @@ public class ProductService {
         if (product.checkIsMine(userId)) {
             productRepository.delete(product);
         }
+
+        List<Image> imageUrls = imageRepository.findByProductId(productId);
+        imageService.deleteImages(imageUrls);
+
+        imageRepository.deleteByProductId(productId);
+        interestedRepository.deleteByProductId(productId);
+        productRepository.deleteById(productId);
+
+        // todo: 삭제한 상품과 관련된 채팅도 삭제하기
     }
 
-    @Transactional
-    public void changeLike(long productId, long userId) {
-        Member member = memberService.findMemberById(userId);
-        Product product = findById(productId);
-        Optional<Interested> interested = interestedRepository.findByMemberAndProduct(member,
-                product);
-        if (interested.isPresent()) {
-            log.debug("이미 좋아요 누른경우 ======================");
-            Interested existInterested = interested.get();
-            product.decreaseCountView();
-            interestedRepository.delete(existInterested);
-            existInterested.deleteInterested(existInterested, member, product);
-            return;
-        }
-        log.debug("처음 좋아요  누른경우 ======================");
-        Interested newInterested = new Interested();
-        newInterested.changeInterested(newInterested, member, product);
-        interestedRepository.save(newInterested);
-        product.increaseCountView();
-        log.debug("상품 좋아요 수 = {}", product.getCountLike());
-    }
+//    @Transactional
+//    public void changeLike(long productId, long userId) {
+//        Member member = memberService.findMemberById(userId);
+//        Product product = findById(productId);
+//        Optional<Interested> interested = interestedRepository.findByMemberIdAndProductId(userId,
+//                productId);
+//        if (interested.isPresent()) {
+//            log.debug("이미 좋아요 누른경우 ======================");
+//            Interested existInterested = interested.get();
+//            product.decreaseCountView();
+//            interestedRepository.delete(existInterested);
+//            existInterested.deleteInterested(existInterested, member, product);
+//            return;
+//        }
+//        log.debug("처음 좋아요  누른경우 ======================");
+//        Interested newInterested = new Interested();
+//        newInterested.changeInterested(newInterested, member, product);
+//        interestedRepository.save(newInterested);
+//        product.increaseCountView();
+//        log.debug("상품 좋아요 수 = {}", product.getCountLike());
+//    }
 
 
     @Transactional

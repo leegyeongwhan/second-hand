@@ -1,8 +1,8 @@
 package com.secondhand.presentation.controller;
 
-import com.secondhand.domain.product.Product;
 import com.secondhand.presentation.support.LoginCheck;
 import com.secondhand.presentation.support.LoginValue;
+import com.secondhand.service.InterestedProductService;
 import com.secondhand.service.ProductQueryService;
 import com.secondhand.service.ProductService;
 import com.secondhand.util.BasicResponse;
@@ -33,6 +33,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductQueryService productQueryService;
+    private final InterestedProductService wishItemService;
 
     @GetMapping
     public BasicResponse<MainPageResponse> viewPage(ProductSearchCondition productSearchCondition,
@@ -61,22 +62,13 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}")
-    public BasicResponse<ProductResponse> changeLike(
+    public BasicResponse<Void> changeLike(
             final @Valid @RequestBody StatusOrLikeRequest request,
             @PathVariable long productId,
             @LoginValue long userId) {
 
-        if (request.getStatus() == null) {  //like
-            productService.changeLike(productId, userId);
-        } else {
-            productService.changeStatus(productId, userId, request.getStatus());
-        }
-
-        Product product = productService.findById(productId);
-        ProductResponse response = ProductResponse.of(true, product);
-
-        return BasicResponse.send(HttpStatus.OK.value(), "사용자는상품을 과 관심상품 / 해제 할수 있다.", response);
-
+        wishItemService.changeLike(productId, userId, request);
+        return BasicResponse.send(HttpStatus.OK.value(), "사용자는상품을 과 관심상품 / 해제 할수 있다.");
     }
 
 

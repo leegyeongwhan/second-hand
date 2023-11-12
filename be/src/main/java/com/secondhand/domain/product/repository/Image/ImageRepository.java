@@ -12,7 +12,7 @@ public interface ImageRepository extends JpaRepository<Image, Long>, ImageReposi
 
     List<Image> findByProductId(Long productId);
 
-    //void deleteByProduct_IdAndImgUrlIn(Long itemId, List<String> deleteImgUrls);
+    void deleteByProduct_IdAndImgUrlIn(Long itemId, List<String> deleteImgUrls);
 
     @Modifying
     @Query("DELETE FROM Image image  WHERE image.product.id = :productId")

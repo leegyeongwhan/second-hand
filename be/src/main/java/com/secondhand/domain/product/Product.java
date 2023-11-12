@@ -1,7 +1,6 @@
 package com.secondhand.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.secondhand.domain.categoriy.Category;
 import com.secondhand.domain.image.Image;
 import com.secondhand.domain.interested.Interested;
 import com.secondhand.domain.member.Member;
@@ -84,24 +83,6 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product")
     private Set<Interested> interesteds;
 
-//    public static Product create(ProductSaveRequest requestInfo, Member member, Category category, Town town, String thumbnailImage) {
-//        return Product.builder()
-//                .title(requestInfo.getTitle())
-//                .content(requestInfo.getContent())
-//                .price(requestInfo.getPrice())
-//                .thumbnailUrl(thumbnailImage)
-//                .countLike(0)
-//                .countView(0)
-//                .status(Status.SELLING)
-//                .deleted(false)
-//                .category(category)
-//                .towns(town)
-//                .member(member)
-//                //   .images(new ArrayList<>())
-//                //  .interesteds(new HashSet<>())
-//                .build();
-//    }
-
     @Builder
     private Product(Long id, String title, String content, Integer price, String thumbnailUrl,
             Status status, String category, Town towns, Member member) {
@@ -168,4 +149,11 @@ public class Product extends BaseTimeEntity {
         this.chatCount++;
     }
 
+    public void increaseInterestedCount(Interested interested) {
+        interesteds.add(interested);
+    }
+
+    public void decreaseInterestedCount(Interested interested) {
+        interesteds.remove(interested);
+    }
 }

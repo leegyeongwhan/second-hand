@@ -4,6 +4,7 @@ import com.secondhand.presentation.support.LoginCheck;
 import com.secondhand.presentation.support.LoginValue;
 import com.secondhand.service.InterestedProductService;
 import com.secondhand.service.ProductQueryService;
+import com.secondhand.service.ProductReadFacade;
 import com.secondhand.service.ProductService;
 import com.secondhand.util.BasicResponse;
 import com.secondhand.web.dto.filtercondition.ProductCategorySearchCondition;
@@ -33,6 +34,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductQueryService productQueryService;
+    private final ProductReadFacade productReadFacade;
     private final InterestedProductService wishItemService;
 
     @GetMapping
@@ -83,25 +85,24 @@ public class ProductController {
     }
 
 
-    @LoginCheck
-    @PutMapping("/{productId}")
-    public BasicResponse<ProductResponse> update(@LoginValue long userId,
-            @PathVariable Long productId,
-            @Valid @RequestBody ProductUpdateRequest updateRequest) {
-        productService.update(productId, updateRequest, userId);
-        ProductResponse productUpdateResponse = productQueryService.isValidMinePage(productId,
-                userId);
+//    @PutMapping("/{productId}")
+//    public BasicResponse<ProductResponse> update(@LoginValue long userId,
+//            @PathVariable Long productId,
+//            @Valid @RequestBody ProductUpdateRequest updateRequest) {
+//        productService.update(productId, updateRequest, userId);
+//        ProductResponse productUpdateResponse = productQueryService.isValidMinePage(productId,
+//                userId);
+//
+//        return BasicResponse.send(HttpStatus.OK.value(), "상품 수정.", productUpdateResponse);
+//    }
 
-        return BasicResponse.send(HttpStatus.OK.value(), "상품 수정.", productUpdateResponse);
-    }
 
-
-    @LoginCheck
     @GetMapping("/{productId}")
-    public BasicResponse<ProductResponse> readDetail(@LoginValue long userId,
+    public BasicResponse<ProductResponse> readDetail(
+            @LoginValue long userId,
             @PathVariable long productId) {
 
-        ProductResponse detailPage = productQueryService.getDetailPage(productId, userId);
+        ProductResponse detailPage = productReadFacade.read(productId, userId);
 
         return BasicResponse.send(HttpStatus.OK.value(), "상품 디테일 페이지.", detailPage);
     }

@@ -33,19 +33,11 @@ public class ProductQueryService {
     private final ProductRepository productRepository;
     private final MemberService memberService;
 
-
-    @Transactional
-    public ProductResponse getDetailPage(long productId, long userId) {
-        Product product = findById(productId);
-        productRepository.countViews(productId);
-        return ProductResponse.of(product.checkIsMine(userId), product);
-    }
-
-    public ProductResponse isValidMinePage(
-            long productId, long userId) {
-        Product product = findById(productId);
-        return ProductResponse.of(product.checkIsDetailPageMine(userId), product);
-    }
+//    public ProductResponse isValidMinePage(
+//            long productId, long userId) {
+//        Product product = findById(productId);
+//        return ProductResponse.of(product.checkIsDetailPageMine(userId), product);
+//    }
 
     public MainPageResponse getProductList(ProductSearchCondition productSearchCondition,
             long userId) {

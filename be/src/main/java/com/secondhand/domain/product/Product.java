@@ -156,4 +156,12 @@ public class Product extends BaseTimeEntity {
     public void decreaseInterestedCount(Interested interested) {
         interesteds.remove(interested);
     }
+
+    public boolean isSeller(Long memberId) {
+        return this.member.getId() == memberId;
+    }
+
+    public void addViewCount(Integer viewCount) {
+        this.countView += viewCount;
+    }
 }

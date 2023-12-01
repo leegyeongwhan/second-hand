@@ -3,9 +3,11 @@ package com.secondhand.presentation.controller;
 import com.secondhand.domain.chat.CustomSlice;
 import com.secondhand.domain.chat.dto.ChatRoomResponse;
 import com.secondhand.domain.chat.dto.request.ChatRequest;
+import com.secondhand.domain.chat.dto.request.ChatbubbleRequest;
 import com.secondhand.presentation.support.LoginValue;
 import com.secondhand.service.ChatLogService;
 import com.secondhand.service.ChatRoomService;
+import com.secondhand.service.redis.RedisService;
 import com.secondhand.util.BasicResponse;
 import com.secondhand.web.dto.chat.ChatLogResponse;
 import java.util.List;
@@ -16,8 +18,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +43,8 @@ public class ChatController {
     private final Map<DeferredResult<BasicResponse<CustomSlice<ChatRoomResponse>>>, Long> chatRoomRequests = new ConcurrentHashMap<>();
     private final ChatLogService chatLogService;
     private final ChatRoomService chatRoomService;
+    private final RedisService redisService;
+    private final ChannelTopic chatTopic;
 
     @GetMapping("/chats/{chatRoomId}")
     public DeferredResult<BasicResponse<ChatLogResponse>> readAll(
@@ -57,7 +63,7 @@ public class ChatController {
             deferredResult.setResult(
                     BasicResponse.send(HttpStatus.OK.value(), "채팅방이 없습니다", messages));
         }
-
+        //TODO: 알람 서비스
         return deferredResult;
     }
 
@@ -126,6 +132,11 @@ public class ChatController {
         }
 
         return BasicResponse.send(HttpStatus.OK.value(), "성공");
+    }
+
+    @MessageMapping("/chats/{chatRoomId}/message")
+    public void message(ChatbubbleRequest request) {
+        redisService.publish(chatTopic.getTopic(), request.toDomain());
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

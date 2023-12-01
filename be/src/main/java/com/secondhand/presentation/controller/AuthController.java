@@ -36,7 +36,7 @@ public class AuthController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/{provider}/signup")
-    public BasicResponse<Valid> signUp(@RequestHeader(name = "User-Agent") String userAgent,
+    public BasicResponse<Void> signUp(@RequestHeader(name = "User-Agent") String userAgent,
                                        @PathVariable OAuthProvider provider,
                                        @NotNullParam(message = "code 값은 반드시 들어와야 합니다.") String code,
                                        @RequestBody @Valid SignUpRequest signupData) {

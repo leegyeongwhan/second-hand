@@ -102,7 +102,6 @@ public class Product extends BaseTimeEntity {
         this.title = updateRequest.getTitle();
         this.content = updateRequest.getContent();
         this.price = updateRequest.getPrice();
-        //    this.thumbnailUrl = updateRequest.getProductImages().get(0).getName();
         this.category = category;
         this.towns = town;
     }
@@ -124,14 +123,6 @@ public class Product extends BaseTimeEntity {
             }
         }
         return false;
-    }
-
-    public void increaseCountView() {
-        this.countLike++;
-    }
-
-    public void decreaseCountView() {
-        this.countLike--;
     }
 
     public boolean checkIsMine(long userId) {

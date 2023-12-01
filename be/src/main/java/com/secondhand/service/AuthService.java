@@ -8,6 +8,7 @@ import com.secondhand.domain.oauth.RequestOAuthInfoService;
 import com.secondhand.domain.town.Town;
 import com.secondhand.exception.v2.UnAuthorizedException;
 import com.secondhand.infrastructure.jwt.AuthorizationExtractor;
+import com.secondhand.service.redis.RedisService;
 import com.secondhand.web.dto.login.AuthToken;
 import com.secondhand.web.dto.login.UserProfile;
 import com.secondhand.domain.member.Member;
